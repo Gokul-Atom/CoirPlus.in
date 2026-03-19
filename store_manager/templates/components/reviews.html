@@ -1,0 +1,32 @@
+{% load my_filters %}
+
+{% include "components/htmx_indicator.html" %}
+{% for review in product_reviews %}
+<div class="review">
+    {% include "components/htmx_indicator.html" %}
+    <div class="d-flex gap-3 align-items-center">
+        <div class="star-rating">
+            {% for class in review.rating|star_rating_classes:5 %}
+            <span class="{{ class }} fs-5"></span>
+            {% endfor %}
+        </div>
+        {% if request.user == review.user %}
+        <div>
+            <button class="btn text-danger" hx-target="closest .review" hx-delete="{% url 'delete_review' review_id=review.id %}" hx-indicator="closest .review" hx-confirm="Are you sure to delete this review?">Delete</button>
+        </div>
+        {% endif %}
+    </div>
+    <div class="fs-6 fw-semibold">{{ review.title }}</div>
+    <div>{{ review.comment }}</div>
+    <div class="d-flex flex-wrap gap-3 mt-2">
+        <span>{{ review.user.display_name|default:review.user }}</span>
+        <span class="bi bi-dot"></span>
+        <span>{{ review.date_created }}</span>
+    </div>
+</div>
+{% if not forloop.last %}
+<hr>
+{% endif %}
+{% empty %}
+<p>There are no reviews yet.</p>
+{% endfor %}

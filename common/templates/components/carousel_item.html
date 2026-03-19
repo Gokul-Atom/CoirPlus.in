@@ -1,0 +1,13 @@
+{% load wagtailcore_tags wagtailimages_tags %}
+
+<li class="splide__slide">
+    {% if slide.link %}
+    <a href="{{ slide.link }}">
+    {% elif slide.page %}
+    <a href="{% pageurl slide.page %}">
+    {% endif %}
+    {% image slide.image original format-webp class="d-block w-100" %}
+    {% if slide.link or slide.page %}
+    </a>
+    {% endif %}
+</li>

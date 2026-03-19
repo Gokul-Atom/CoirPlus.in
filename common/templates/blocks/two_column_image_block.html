@@ -1,0 +1,22 @@
+{% load wagtailimages_tags wagtailcore_tags %}
+
+<div class="two-column-image-block">
+    {% if self.images.0.link %}
+    <a href="{{ self.images.0.link }}">
+        {% elif self.images.0.page %}
+        <a href="{% pageurl self.images.0.page %}">
+            {% endif %}
+            {% image self.images.0.image width-800 format-webp class="d-block w-100 h-auto" %}
+            {% if self.images.0.link or self.images.0.page %}
+        </a>
+        {% endif %}
+        {% if self.images.1.link %}
+        <a href="{{ self.images.1.link }}">
+            {% elif self.images.1.page %}
+            <a href="{% pageurl self.images.1.page %}">
+                {% endif %}
+                {% image self.images.1.image width-800 format-webp class="d-block w-100 h-auto" %}
+                {% if self.images.1.link or self.images.1.page %}
+            </a>
+            {% endif %}
+</div>

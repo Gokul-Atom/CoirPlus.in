@@ -1,0 +1,89 @@
+@import "variables";
+
+.footer {
+  border-top: 1px solid $border;
+  .footer-body {
+    background: $background-muted;
+    grid-template-columns: 12fr;
+    .brand-logo img {
+      height: auto;
+      @media screen and (max-width: 768px) {
+        max-width: 100%;
+      }
+    }
+    @media screen and (min-width: 576px) {
+      grid-template-columns: repeat(2, 1fr);
+    }
+    @media screen and (min-width: 768px) {
+      grid-template-columns: repeat(3, 1fr);
+      .brand-logo {
+        grid-column: 1 / span 2;
+      }
+    }
+    @media screen and (min-width: 992px) {
+      grid-template-columns: repeat(5, 1fr);
+      .brand-logo {
+        grid-column: auto;
+      }
+    }
+    @media screen and (min-width: 768px) {
+    }
+  }
+  .footer-newsletter {
+    background: #333e48;
+    color: white;
+    & > div {
+      display: grid;
+      gap: 0.5rem;
+      @media screen and (min-width: 768px) {
+        grid-template-columns: 1fr 2fr 2fr;
+        align-items: center;
+      }
+      span {
+        color: white;
+      }
+    }
+  }
+  .bi {
+    font-size: $icon-size;
+  }
+  .footer-links-group {
+    .footer-title {
+      color: $secondary;
+      margin-bottom: 0.75rem;
+      & + ul {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+        .nav-link {
+          align-items: center;
+        }
+      }
+    }
+    &:last-child {
+      @media screen and (min-width: 576px) {
+        grid-column: 1 / span 2;
+      }
+      @media screen and (min-width: 768px) {
+        grid-column: auto;
+      }
+    }
+  }
+  .nav-link {
+    color: $secondary;
+    &:hover {
+      color: $primary;
+    }
+  }
+}
+
+#scroll-to-top {
+  position: fixed;
+  bottom: 3rem;
+  right: 1.5rem;
+  background: white;
+  border-radius: 50rem;
+  .btn {
+    font-size: 3.25rem;
+  }
+}

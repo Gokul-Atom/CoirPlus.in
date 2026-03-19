@@ -1,0 +1,177 @@
+@import "../../../coirplus/static/css/variables";
+
+.product-page {
+  .grid {
+    display: grid;
+    @media screen and (min-width: 768px) {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+  .product-gallery {
+    .thumbnail-splide {
+      .splide__slide {
+        opacity: 0.5;
+        border-radius: $border-radius;
+        overflow: hidden;
+        &.is-active {
+          opacity: 1;
+          border-color: $primary_dark;
+        }
+      }
+    }
+  }
+  .product-detail {
+    .categories {
+      a:not(:last-child)::after {
+        content: ",";
+      }
+    }
+    .price {
+      .amt {
+        font-size: 1.7rem;
+        font-weight: bold;
+      }
+      .sale-price ~ .base-price {
+        font-size: 1.05em;
+        font-weight: 500;
+        opacity: 0.8;
+        text-decoration: line-through;
+        text-decoration-color: red;
+      }
+    }
+    .variations {
+      input {
+        display: none;
+        &:checked {
+          & + label {
+            color: white;
+            background: $primary;
+          }
+        }
+      }
+      label {
+        padding: 0.25rem 0.5rem;
+        border: 1px solid $primary;
+        color: $primary;
+        border-radius: $border-radius;
+      }
+    }
+    .buy {
+      .qty {
+        display: flex;
+        .btn,
+        input {
+          border: 1px solid $border;
+        }
+        .btn-sub {
+          border-radius: $border-radius 0 0 $border-radius !important;
+        }
+        .btn-add {
+          border-radius: 0 $border-radius $border-radius 0 !important;
+        }
+        input {
+          border-left: 0;
+          border-right: 0;
+          border-radius: 0 !important;
+          text-align: center;
+          outline: none;
+          width: 60px;
+          &::-webkit-inner-spin-button,
+          &::-webkit-outer-spin-button {
+            display: none;
+          }
+        }
+      }
+    }
+  }
+  .all-info {
+    margin: 1rem;
+    border-radius: $border-radius;
+    overflow: hidden;
+    border: 1px solid $border;
+    #pills-tab {
+      background: $background;
+      padding: 1rem;
+      button {
+        span {
+          color: $primary;
+        }
+        &.active,
+        &:hover {
+          span {
+            color: white;
+          }
+        }
+      }
+    }
+    #pills-tabContent {
+      & > div {
+        padding: 1rem;
+        font-size: 1.05em;
+        .product-gallery {
+          img {
+            border-radius: $border-radius;
+          }
+        }
+      }
+      .reviews-section {
+        display: grid;
+        gap: 5rem;
+        @media screen and (min-width: 992px) {
+          gap: 3rem;
+          grid-template-columns: 5fr 7fr;
+        }
+        .review-update {
+          @media screen and (min-width: 992px) {
+            padding-right: 3rem;
+            border-right: 1px solid $border;
+          }
+        }
+        .reviews {
+          padding-right: 1.5rem;
+        }
+        .review-form {
+          display: flex;
+          flex-direction: column;
+          gap: 2rem;
+          .rating {
+            display: flex;
+            height: 2rem;
+            overflow-y: hidden;
+            label {
+              padding: 0 0.25rem;
+              font-size: 2rem;
+              @media screen and (min-width: 768px) {
+                padding: 0 0.5rem;
+              }
+              input {
+                display: none;
+              }
+              &:has(~ label input:checked) input,
+              &:has(~ label:hover) input,
+              input:hover,
+              input:checked {
+                & + div {
+                  transform: translateY(-2rem);
+                }
+              }
+              &:has(~ label):hover {
+                & + div .bi {
+                  opacity: 0.5;
+                }
+              }
+            }
+            div:has(> .bi) {
+              transition: transform ease 100ms;
+              .bi {
+                display: flex;
+                height: 2rem;
+                transition: opacity ease 100ms;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

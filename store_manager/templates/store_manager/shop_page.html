@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% load static my_tags %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/shop_page.css' %}{% static_timestamp %}">
+<link rel="stylesheet" href="{% static 'css/product_card.css' %}{% static_timestamp %}">
+{% endblock %}
+
+{% block body_class %}shop{% endblock %}
+
+{% block content %}
+<div class="main" x-data="{ open: false }">
+    <aside class="sidebar p-3" :class="{'show': open}">
+        <div class="d-flex justify-content-end w-100 d-lg-none">
+            <span class="bi bi-x-lg fs-2" @click="open = false"></span>
+        </div>
+        {% include "components/shop_sidebar.html" %}
+    </aside>
+    <div class="products-section">
+        <div class="p-3 topbar">
+            <div class="d-lg-none">
+                <button class="btn btn-outline-primary filter-btn fw-semibold" @click="open = !open"><span class="bi bi-funnel-fill me-2"></span>Filters</button>
+            </div>
+            <form action="" method="get" class="ms-auto" hx-get="" hx-trigger="change delay:0.2s" hx-target="#shop-products" hx-indicator="#shop-products">
+                <select name="orderby" class="form-select orderby" aria-label="Shop order">
+                    <option value="default" selected="selected">Default sorting</option>
+                    <option value="popularity">Sort by popularity</option>
+                    <option value="rating">Sort by average rating</option>
+                    <option value="date">Sort by latest</option>
+                    <option value="price">Sort by price: low to high</option>
+                    <option value="price-desc">Sort by price: high to low</option>
+                </select>
+            </form>
+        </div>
+        <div class="products" id="shop-products">
+            {% include "components/shop_products.html" %}
+        </div>
+    </div>
+</div>
+{% endblock %}

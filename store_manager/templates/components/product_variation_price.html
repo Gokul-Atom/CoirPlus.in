@@ -1,0 +1,8 @@
+<div class="d-none">
+    {% include "components/htmx_indicator.html" %}
+</div>
+
+{% if variation.sale_price %}
+<span class="sale-price amt">{{ variation.sale_price }}</span>
+{% endif %}
+<span class="base-price amt">{{ variation.base_price }}</span>

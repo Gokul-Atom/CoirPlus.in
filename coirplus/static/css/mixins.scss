@@ -1,0 +1,12 @@
+@import "variables";
+
+@mixin heading($color: $secondary, $font-size: 1.5rem) {
+  color: $color;
+  font-size: $font-size;
+  font-weight: 600;
+}
+
+@mixin body() {
+    color: $secondary;
+    font-size: 0.8rem;
+}

@@ -1,0 +1,18 @@
+<section id="{{ carousel.splide_id }}" class="splide" aria-label="{{ carousel.label }}">
+    <div class="splide__track">
+        <ul class="splide__list">
+            {% for slide in carousel.slides %}
+            {% include "components/carousel_item.html" %}
+            {% endfor %}
+        </ul>
+    </div>
+</section>
+
+<script>
+    function initSplide() {
+        const el = document.querySelector("#{{ carousel.splide_id }}");
+        const splide = new Splide(el, {{ carousel.splide_options|safe }} );
+        splide.mount();
+    }
+    document.addEventListener("DOMContentLoaded", initSplide);
+</script>

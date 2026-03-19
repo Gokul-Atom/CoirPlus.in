@@ -1,0 +1,12 @@
+<table>
+    <tbody>
+        <tr style="display: flex; flex-wrap: wrap; gap: 1rem;">
+            <th>Date Created</th>
+            <td>{{ self.instance.date_created|default:"-" }}</td>
+        </tr>
+        <tr style="display: flex; flex-wrap: wrap; gap: 1rem;">
+            <th>Date Updated</th>
+            <td>{{ self.instance.date_updated|default:"-" }}</td>
+        </tr>
+    </tbody>
+</table>

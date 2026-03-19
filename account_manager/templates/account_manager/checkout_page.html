@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+{% load static my_tags %}
+
+{% block body_class %}checkout-page{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/checkout_page.css' %}{% static_timestamp %}">
+{% endblock %}
+
+{% block content %}
+<div class="checkout py-3">
+    <h1 class="page-title">Checkout</h1>
+    <form action="" method="post" hx-post="" novalidate hx-target="#checkout">
+        <div class="d-grid">
+            <div class="checkout" id="checkout">
+                {% include "components/checkout_form.html" %}
+            </div>
+            <div class="order-detail">
+                <div>
+                    <h3 class="fw-semibold section-title">Your order</h3>
+                    <div class="table-responsive">
+                        <table class="w-100" hx-get="/api/basket/" x-data="{ basket:{}}" hx-swap="none" hx-trigger="load" @htmx:after-request="$data.basket=JSON.parse(event.detail.xhr.response || '{}')">
+                            <thead>
+                                <tr>
+                                    <th class="fw-bold fs-6">Product</th>
+                                    <th class="fw-bold fs-6 text-end">Subtotal</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <template x-for="item in basket.items">
+                                    <tr>
+                                        <td x-text="item.product.name"></td>
+                                        <td x-text="item.subtotal" class="text-end amt"></td>
+                                    </tr>
+                                </template>
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <td class="fw-semibold fs-6">Subtotal</td>
+                                    <td x-text="basket.subtotal" class="amt text-end fs-6 fw-semibold"></td>
+                                </tr>
+                                <template x-for="row in basket.extra_rows">
+                                    <tr>
+                                        <td class="fw-semibold fs-6" x-text="row.label"></td>
+                                        <td x-text="row.amount" class="amt text-end fs-6 fw-semibold"></td>
+                                    </tr>
+                                </template>
+                                <tr>
+                                    <td class="fw-bold fs-5">Total</td>
+                                    <td x-text="basket.total" class="amt text-end fs-5 fw-bold"></td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                    <div class="payment-methods" x-data="{payment_methods : {}}" hx-get="/api/checkout/" hx-swap="none" hx-trigger="load" @htmx:after-request="$data.payment_methods=JSON.parse(event.detail.xhr.response || '{}')">
+                        <hr>
+                        <div class="fs-5">Pay Using</div>
+                        <template x-for="(method, index) in payment_methods.payment_methods">
+                            <div>
+                                <input type="radio" name="payment-method" id="method.identifier" :value="method.identifier" :checked="index == 0">
+                                <label for="method.identifier" x-text="method.label"></label>
+                            </div>
+                        </template>
+                        <template x-if="!payment_methods?.payment_methods?.length">
+                            <div>
+                                Sorry, no payment methods found!
+                            </div>
+                        </template>
+                    </div>
+                    <button type="submit" class="btn btn-primary mt-3 fw-semibold w-100">Place Order</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+{% endblock %}

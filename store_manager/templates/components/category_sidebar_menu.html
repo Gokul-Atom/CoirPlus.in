@@ -1,0 +1,24 @@
+{% load wagtailcore_tags %}
+
+<div class="d-flex flex-column gap-2">
+    {% for category in categories %}
+    {% with children=category.children.all %}
+    <div class="d-flex flex-column" {% if children %}x-data="{ open_{{ level }}_{{ forloop.counter }}: false}" {% endif %}>
+        <div class="d-flex gap-2 align-items-start lvl lvl-{{ level }}" style="--l: {{ level }}">
+            <input type="checkbox" class="form-check-input fs-4" name="category" id="category-{{ level }}-{{ forloop.counter }}" value="{{ category.slug }}">
+            <label class="form-check-label d-flex gap-2 justify-content-between" for="category-{{ level }}-{{ forloop.counter}}">
+                <a hx-get="{% pageurl shop_page %}?category={{ category.slug }}" hx-target="#shop-products" hx-indicator="#shop-products" href="{% pageurl shop_page %}?category={{ category.slug }}" class="nav-link">{{ category.title }}</a>
+            </label>
+            {% if children %}
+            <span class="bi bi-plus-lg" @click="open_{{ level }}_{{ forloop.counter }} = !open_{{ level }}_{{ forloop.counter }}"></span>
+            {% endif %}
+        </div>
+        {% if children %}
+        <div x-show="open_{{ level }}_{{ forloop.counter }}">
+            {% include "components/category_sidebar_menu.html" with level=level|add:1 categories=children %}
+        </div>
+        {% endif %}
+    </div>
+    {% endwith %}
+    {% endfor %}
+</div>

@@ -1,0 +1,166 @@
+@import "../../../coirplus/static/css/variables";
+
+.product-card {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  overflow: hidden;
+  .product-image {
+    border-radius: $border-radius;
+    border: 1px solid $border;
+    overflow: hidden;
+    position: relative;
+    img {
+      transition: all ease 300ms;
+    }
+    .add-to-cart-btn {
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      width: calc(100% - 2rem);
+      transform: translate(-50%, 2.5rem);
+      transition: transform ease 200ms;
+    }
+  }
+  .actions {
+    top: 2rem;
+    right: 1rem;
+    a {
+      aspect-ratio: 1;
+      border-radius: 50rem;
+      padding: 0.5rem;
+      background: white;
+      box-shadow: 0 0 4px $background;
+      border: 1px solid $border;
+      transform: translateX(2rem);
+      opacity: 0;
+      transition: all ease 150ms calc(var(--i, 0) * 100ms);
+      pointer-events: none;
+      .bi {
+        display: flex;
+        font-size: 1.5rem;
+      }
+    }
+  }
+  &:hover {
+    .product-image {
+      img {
+        transform: scale(1.05);
+      }
+      .add-to-cart-btn {
+        transform: translate(-50%, -1rem);
+      }
+    }
+    .actions {
+      a {
+        opacity: 1;
+        pointer-events: auto;
+        transform: translateX(0);
+      }
+    }
+  }
+  .product-info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    .variations {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      .variation {
+        display: flex;
+        text-align: center;
+        flex-grow: 1;
+        input {
+          display: none;
+          &:checked {
+            + label {
+              background: $primary_dark;
+              color: white;
+            }
+          }
+        }
+        label {
+          border: 1px solid $primary;
+          padding: 0.25rem 0.5rem;
+          border-radius: $border-radius;
+          background: $background;
+          font-size: 0.7rem;
+          font-weight: 600;
+          flex-grow: 1;
+          &:hover {
+            background: $primary;
+            color: white;
+          }
+        }
+      }
+    }
+    .categories {
+      .category-title:not(:last-child)::after {
+        content: ",";
+      }
+    }
+    .price {
+      position: relative;
+      .htmx-indicator {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+      }
+      .from,
+      .bi,
+      .to {
+        font-size: 1rem;
+        font-weight: 600;
+      }
+      .sale-price,
+      .base-price {
+        font-size: 1.25rem;
+        font-weight: bold;
+      }
+      .sale-price ~ .base-price {
+        font-size: inherit;
+        font-weight: normal;
+        text-decoration: line-through;
+        text-decoration-color: red;
+      }
+    }
+  }
+}
+
+.recently-viewed {
+  padding: 1rem;
+  .products {
+    display: grid;
+    gap: 2rem 1rem;
+
+    grid-template-columns: repeat(2, 1fr);
+    @media screen and (min-width: 768px) {
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2rem;
+    }
+    @media screen and (min-width: 992px) {
+      grid-template-columns: repeat(4, 1fr);
+    }
+    @media screen and (min-width: 1200px) {
+      grid-template-columns: repeat(5, 1fr);
+    }
+  }
+}
+
+.shop {
+  .products {
+    display: grid;
+    padding: 1rem;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2rem 1rem;
+    @media screen and (min-width: 768px) {
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2rem;
+    }
+    @media screen and (min-width: 1200px) {
+      grid-template-columns: repeat(4, 1fr);
+    }
+  }
+}

@@ -1,0 +1,81 @@
+{% load wagtailcore_tags wagtailimages_tags %}
+
+<div class="product-card position-relative" x-data="{{ product.product_details }}">
+    <div class="product-image">
+        <a href="{% url 'product_page' slug=product.slug %}">
+            {% with product_images=product.images.all %}
+            {% image product_images.0.image|default:placeholder_image width-400 format-webp class="d-block w-100 h-auto" %}
+            {% endwith %}
+        </a>
+        <form action="" method="post">
+            <input type="hidden" name="product_type" value="store_manager.ProductVariation">
+            <input type="hidden" name="product_id" value="{{ variation.id }}">
+            <button class="btn btn-primary add-to-cart-btn"><span class="bi bi-cart-plus me-2 fs-6 text-white"></span>Add to Cart</button>
+        </form>
+    </div>
+    <div class="position-absolute d-flex flex-column gap-3 actions">
+        <a href="#" type="button" data-bs-toggle="tooltip" data-bs-placement="left" data-bs-title="Quick View" title="Quick View" style="--i: 1">
+            <span class="bi bi-eye"></span>
+        </a>
+        <a href="#" type="button" data-bs-toggle="tooltip" data-bs-placement="left" data-bs-title="Add to Wishlist" title="Wishlist" style="--i: 2">
+            <span class="bi bi-heart"></span>
+        </a>
+    </div>
+    <div class="product-info">
+        <div class="variations">
+            {% for variation in product.product_variations.all %}
+            <div class="variation">
+                <input type="radio" name="variation" id="v-{{ variation.id }}-{{ forloop.counter }}" value="{{ variation.attribute_value.value }}" hx-trigger="click" hx-get="{% url 'get_product_variation_price' variation_id=variation.id %}" hx-target="#price-{{ product.id }}" hx-indicator="#price-{{ product.id }}">
+                <label for="v-{{ variation.id }}-{{ forloop.counter }}">{{ variation.attributes.first.value }}</label>
+            </div>
+            {% endfor %}
+        </div>
+        <div class="categories">
+            {% for category in product.categories.all %}
+            {% for cat in category.breadcrumbs %}
+            <a href="{% pageurl shop_page %}?category={{ cat.slug }}" class="category-title">
+                <small>
+                    {{ cat.title }}
+                </small>
+            </a>
+            {% endfor %}
+            {% endfor %}
+        </div>
+        <a href="{% url 'product_page' slug=product.slug %}" class="fs-5 product-title">
+            {{ product.title }}
+        </a>
+        <div class="price" id="price-{{ product.id }}">
+            {% include "components/product_price_range.html" %}
+        </div>
+    </div>
+</div>
+
+<div x-data="{
+    variations: {{ product.product_details }},
+    selectedAttributes: {},
+    get filteredVariation() {
+        return this.variations.find(v =>
+            Object.keys(this.selectedAttributes).every(key =>
+                v.attributes.some(attr => attr.id == this.selectedAttributes[key])
+            )
+        ) || null;
+    }
+}">
+    <!-- Attribute selectors -->
+    {% for attr in product.attributes.all %}
+        <select x-model="selectedAttributes['{{ attr.id }}']">
+            <option value="">Select {{ attr.name }}</option>
+            {% for value in attr.values.all %}
+                <option :value="{{ value.id }}">{{ value.value }}</option>
+            {% endfor %}
+        </select>
+    {% endfor %}
+
+    <!-- Display selected variation -->
+    <template x-if="filteredVariation">
+        <div>
+            Price: <span x-text="filteredVariation.price"></span>
+            Stock: <span x-text="filteredVariation.stock"></span>
+        </div>
+    </template>
+</div>   

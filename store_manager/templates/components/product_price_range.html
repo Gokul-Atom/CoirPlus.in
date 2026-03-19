@@ -1,0 +1,6 @@
+{% include "components/htmx_indicator.html" %}
+<span class="from amt">{{ product.price_range.min }}</span>
+{% if product.price_range.max %}
+<span class="bi bi-dash"></span>
+<span class="to amt">{{ product.price_range.max }}</span>
+{% endif %}

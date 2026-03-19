@@ -1,0 +1,20 @@
+{% load wagtailcore_tags wagtailimages_tags %}
+
+<div class="position-relative cta-section">
+    {% image self.background_image width-1600 format-webp class="position-absolute top-0 start-0 w-100 h-100" %}
+    <div>
+        <div class="cta-title fs-1 h">{{ self.cta_title|richtext }}</div>
+        <div>
+            {% if self.link or self.page %}
+            <a href="{{ self.link|default:self.page.url }}" class="btn btn-primary cta-button">
+                {% else %}
+                <a href="#" class="btn btn-primary cta-button">
+                    {% endif %}
+                    {% if self.icon %}
+                    <span class="{{ self.icon }} fs-1 me-2 text-white"></span>
+                    {% endif %}
+                    <span class="fs-1 text-white">{{ self.cta_text }}</span>
+                </a>
+        </div>
+    </div>
+</div>

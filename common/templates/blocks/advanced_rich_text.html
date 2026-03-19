@@ -1,0 +1,8 @@
+{% load wagtailcore_tags %}
+<div
+{% if self.css_class %}class="{{ self.css_class }}"{% endif %}
+{% if self.css_id %}id="{{ self.css_id }}"{% endif %}
+{% if self.css_style %}class="{{ self.css_style|safe }}"{% endif %}
+>
+    {{ self.rich_text|richtext }}
+</div>

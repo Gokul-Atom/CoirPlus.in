@@ -1,0 +1,107 @@
+{% load wagtailimages_tags my_tags my_filters menu_tags %}
+
+{% with common_settings=settings.common.SiteSettings %}
+<footer class="d-flex flex-column footer">
+    <div class="d-grid py-5 px-3 gap-4 footer-body">
+        <div class="brand-logo">
+            <a href="{% site_root %}">
+                {% image common_settings.logo format-webp width-500 class="w-100" %}
+            </a>
+        </div>
+        <div class="footer-links-group">
+            {% flat_menu "get_help_menu" template="menus/footer_menu.html" %}
+        </div>
+        <div class="footer-links-group">
+            <div class="fs-5 fw-semibold footer-title">Popular Categories</div>
+            <ul class="list-unstyled">
+                {% for category in popular_categories %}
+                <li class="nav-item">
+                    <a href="#" class="nav-link">
+                        {{ category.title }}
+                    </a>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+        <div class="footer-links-group">
+            {% flat_menu "useful_links_menu" template="menus/footer_menu.html" %}
+
+        </div>
+        <div class="footer-links-group">
+            <div class="fs-5 fw-semibold footer-title">Contact</div>
+            <ul class="list-unstyled">
+                <li class="nav-item">
+                    <a href="{{ common_settings.google_maps_url }}" class="nav-link d-flex" target="_blank" rel="noreferrer noopener">
+                        <span class="bi bi-geo-alt me-3"></span>
+                        <span>
+                            {{ common_settings.address }}
+                        </span>
+                    </a>
+                </li>
+                {% for number in common_settings.contact_numbers|splitlines %}
+                <li class="nav-item">
+                    <a href="tel:{{ number|cut:' ' }}" class="nav-link d-flex" target="_blank" rel="noreferrer noopener">
+                        <span class="bi bi-phone me-3"></span>
+                        <span>
+                            {{ number }}
+                        </span>
+                    </a>
+                </li>
+                {% endfor %}
+                {% for email in common_settings.contact_emails|splitlines %}
+                <li class="nav-item">
+                    <a href="mailto:{{ email }}" class="nav-link d-flex" target="_blank" rel="noreferrer noopener">
+                        <span class="bi bi-envelope me-3"></span>
+                        <span>
+                            {{ email }}
+                        </span>
+                    </a>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+    <div class="footer-newsletter py-5 px-3">
+        <div>
+            <div class="d-flex align-items-center gap-3">
+                <span class="bi bi-envelope fs-3"></span>
+                <span class="fs-5 fw-semibold h">Join Our Newsletter</span>
+            </div>
+            <span class="mb-md-0">
+                Register now to get latest updates on promotions & coupons.
+            </span>
+            <form action="" class="newsletter-form">
+                <input type="email" name="email" class="form-control" id="email" placeholder="Email">
+                <input type="submit" value="Subscribe" class="form-control mt-2 btn btn-primary">
+            </form>
+        </div>
+    </div>
+    <div class="footer-social-links py-4 px-3">
+        <div class="d-flex flex-wrap gap-4 justify-content-center">
+            {% for profile in common_settings.social_media_profiles.all %}
+            <a href="{{ profile.url }}" target="_blank" rel="noreferrer noopener" class="nav-link border rounded-pill p-3">
+                <span class="d-flex {{ profile.icon_class }} fs-3"></span>
+                <span class="visually-hidden">Facebook</span>
+            </a>
+            {% endfor %}
+        </div>
+    </div>
+    <div class="d-flex flex-wrap justify-content-center" style="gap: 0.5rem 1rem">
+        <a href="#" class="nav-link fw-bold">New Arrivals</a>
+        <a href="#" class="nav-link fw-bold">Best sale</a>
+        <a href="#" class="nav-link fw-bold">Value of the day</a>
+        <a href="#" class="nav-link fw-bold">Top 100 offers</a>
+        <a href="#" class="nav-link fw-bold">Blog</a>
+    </div>
+    <div class="text-center footer-copyright pt-4 pb-5 px-3">
+        <small style="font-size: 0.8em;">
+            {{ settings.common.SiteSettings.site_title|default:"Site name" }} &copy; {{ now|date:'Y' }}. All rights reserved.
+        </small>
+    </div>
+</footer>
+<div id="scroll-to-top">
+    <button class="btn text-primary rounded-pill p-0 bi bi-arrow-up-circle-fill d-flex">
+        <span class="visually-hidden">Scroll to top</span>
+    </button>
+</div>
+{% endwith %}

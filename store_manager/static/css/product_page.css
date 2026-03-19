@@ -1,0 +1,148 @@
+.product-page .grid {
+  display: grid;
+}
+@media screen and (min-width: 768px) {
+  .product-page .grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+.product-page .product-gallery .thumbnail-splide .splide__slide {
+  opacity: 0.5;
+  border-radius: 1rem;
+  overflow: hidden;
+}
+.product-page .product-gallery .thumbnail-splide .splide__slide.is-active {
+  opacity: 1;
+  border-color: #597231;
+}
+.product-page .product-detail .categories a:not(:last-child)::after {
+  content: ",";
+}
+.product-page .product-detail .price .amt {
+  font-size: 1.7rem;
+  font-weight: bold;
+}
+.product-page .product-detail .price .sale-price ~ .base-price {
+  font-size: 1.05em;
+  font-weight: 500;
+  opacity: 0.8;
+  text-decoration: line-through;
+  text-decoration-color: red;
+}
+.product-page .product-detail .variations input {
+  display: none;
+}
+.product-page .product-detail .variations input:checked + label {
+  color: white;
+  background: #769840;
+}
+.product-page .product-detail .variations label {
+  padding: 0.25rem 0.5rem;
+  border: 1px solid #769840;
+  color: #769840;
+  border-radius: 1rem;
+}
+.product-page .product-detail .buy .qty {
+  display: flex;
+}
+.product-page .product-detail .buy .qty .btn,
+.product-page .product-detail .buy .qty input {
+  border: 1px solid #E6E6E6;
+}
+.product-page .product-detail .buy .qty .btn-sub {
+  border-radius: 1rem 0 0 1rem !important;
+}
+.product-page .product-detail .buy .qty .btn-add {
+  border-radius: 0 1rem 1rem 0 !important;
+}
+.product-page .product-detail .buy .qty input {
+  border-left: 0;
+  border-right: 0;
+  border-radius: 0 !important;
+  text-align: center;
+  outline: none;
+  width: 60px;
+}
+.product-page .product-detail .buy .qty input::-webkit-inner-spin-button, .product-page .product-detail .buy .qty input::-webkit-outer-spin-button {
+  display: none;
+}
+.product-page .all-info {
+  margin: 1rem;
+  border-radius: 1rem;
+  overflow: hidden;
+  border: 1px solid #E6E6E6;
+}
+.product-page .all-info #pills-tab {
+  background: #E6E6E6;
+  padding: 1rem;
+}
+.product-page .all-info #pills-tab button span {
+  color: #769840;
+}
+.product-page .all-info #pills-tab button.active span, .product-page .all-info #pills-tab button:hover span {
+  color: white;
+}
+.product-page .all-info #pills-tabContent > div {
+  padding: 1rem;
+  font-size: 1.05em;
+}
+.product-page .all-info #pills-tabContent > div .product-gallery img {
+  border-radius: 1rem;
+}
+.product-page .all-info #pills-tabContent .reviews-section {
+  display: grid;
+  gap: 5rem;
+}
+@media screen and (min-width: 992px) {
+  .product-page .all-info #pills-tabContent .reviews-section {
+    gap: 3rem;
+    grid-template-columns: 5fr 7fr;
+  }
+}
+@media screen and (min-width: 992px) {
+  .product-page .all-info #pills-tabContent .reviews-section .review-update {
+    padding-right: 3rem;
+    border-right: 1px solid #E6E6E6;
+  }
+}
+.product-page .all-info #pills-tabContent .reviews-section .reviews {
+  padding-right: 1.5rem;
+}
+.product-page .all-info #pills-tabContent .reviews-section .review-form {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+.product-page .all-info #pills-tabContent .reviews-section .review-form .rating {
+  display: flex;
+  height: 2rem;
+  overflow-y: hidden;
+}
+.product-page .all-info #pills-tabContent .reviews-section .review-form .rating label {
+  padding: 0 0.25rem;
+  font-size: 2rem;
+}
+@media screen and (min-width: 768px) {
+  .product-page .all-info #pills-tabContent .reviews-section .review-form .rating label {
+    padding: 0 0.5rem;
+  }
+}
+.product-page .all-info #pills-tabContent .reviews-section .review-form .rating label input {
+  display: none;
+}
+.product-page .all-info #pills-tabContent .reviews-section .review-form .rating label:has(~ label input:checked) input + div, .product-page .all-info #pills-tabContent .reviews-section .review-form .rating label:has(~ label:hover) input + div,
+.product-page .all-info #pills-tabContent .reviews-section .review-form .rating label input:hover + div,
+.product-page .all-info #pills-tabContent .reviews-section .review-form .rating label input:checked + div {
+  transform: translateY(-2rem);
+}
+.product-page .all-info #pills-tabContent .reviews-section .review-form .rating label:has(~ label):hover + div .bi {
+  opacity: 0.5;
+}
+.product-page .all-info #pills-tabContent .reviews-section .review-form .rating div:has(> .bi) {
+  transition: transform ease 100ms;
+}
+.product-page .all-info #pills-tabContent .reviews-section .review-form .rating div:has(> .bi) .bi {
+  display: flex;
+  height: 2rem;
+  transition: opacity ease 100ms;
+}/*# sourceMappingURL=product_page.css.map */

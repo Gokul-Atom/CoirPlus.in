@@ -1,0 +1,78 @@
+{% load wagtailcore_tags wagtailimages_tags %}
+
+<div class="product-card position-relative" x-data="{ data: {{product.product_details}}, selected_variation: null }">
+    <div class="product-image">
+        <a href="{% url 'product_page' slug=product.slug %}">
+            {% with product_images=product.images.all %}
+            {% image product_images.0.image|default:placeholder_image width-400 format-webp class="d-block w-100 h-auto" %}
+            {% endwith %}
+        </a>
+        <template x-if="selected_variation">
+            <form action="/api/basket/" hx-post="/api/basket/" method="post" hx-swap="none" @htmx:after-request="htmx.trigger('.cart-qty, .cart-qty-m', 'refreshCartQuantity')" x-init="htmx.process($el)">
+                {% csrf_token %}
+                <input type="hidden" name="product_type" value="store_manager.ProductVariation">
+                <input type="hidden" name="product_id" :value="selected_variation">
+                <button class="btn btn-primary add-to-cart-btn"><span class="bi bi-cart-plus me-2 fs-6 text-white"></span>Add to Cart</button>
+            </form>
+        </template>
+    </div>
+    <div class="position-absolute d-flex flex-column gap-3 actions">
+        <a href="#" type="button" data-bs-toggle="tooltip" data-bs-placement="left" data-bs-title="Quick View" title="Quick View" style="--i: 1">
+            <span class="bi bi-eye"></span>
+        </a>
+        <a href="#" type="button" data-bs-toggle="tooltip" data-bs-placement="left" data-bs-title="Add to Wishlist" title="Wishlist" style="--i: 2">
+            <span class="bi bi-heart"></span>
+        </a>
+    </div>
+    <div class="product-info">
+        <div class="variations">
+            <template x-for="variation in data.variations">
+                <div class="variation">
+                    <input type="radio" name="variation" :id="'v-' + variation.id" :value="variation.id" x-model="selected_variation">
+                    <label :for="'v-' + variation.id" x-text="variation.attributes[0].value"></label>
+                </div>
+            </template>
+        </div>
+        <div class="categories">
+            {% for category in product.categories.all %}
+            {% for cat in category.breadcrumbs %}
+            <a href="{% pageurl shop_page %}?category={{ cat.slug }}" class="category-title">
+                <small>
+                    {{ cat.title }}
+                </small>
+            </a>
+            {% endfor %}
+            {% endfor %}
+        </div>
+        <a href="{% url 'product_page' slug=product.slug %}" class="fs-5 product-title">
+            {{ product.title }}
+        </a>
+        <div class="price" id="price-{{ product.id }}" x-data="{get active_variation() { return data.variations.find(v=>v.id==selected_variation)}}">
+            <template x-if="!selected_variation">
+                <template x-if="data.price_range.max">
+                    <div>
+                        <span class="from amt" x-text="data?.price_range?.min"></span>
+                        <span class="bi bi-dash"></span>
+                        <span class="to amt" x-text="data?.price_range?.max">{{ product.price_range.max }}</span>
+                    </div>
+                </template>
+                <template x-if="!data.price_range.max">
+                    <div>
+                        <span class="from amt" x-text="data?.price_range?.min"></span>
+                    </div>
+                </template>
+            </template>
+            <template x-if="active_variation && active_variation?.sale_price == null">
+                <div>
+                    <span class="base-price amt" x-text="active_variation?.base_price"></span>
+                </div>
+            </template>
+            <template x-if="active_variation && active_variation?.sale_price != null">
+                <div>
+                    <span class="sale-price amt" x-text="active_variation?.sale_price"></span>
+                    <span class="base-price amt" x-text="active_variation?.base_price"></span>
+                </div>
+            </template>
+        </div>
+    </div>
+</div>

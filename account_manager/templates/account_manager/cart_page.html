@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+{% load my_tags static %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/cart_page.css' %}{% static_timestamp %}">
+{% endblock %}
+
+{% block body_class %}cart-page{% endblock %}
+
+{% block content %}
+<div class="py-5 px-3">
+    <h1 class="page-title">{{ page.title }}</h1>
+    <div x-data="{basket:{}}" class="cart-info">
+        <div class="table-responsive">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th>Product</th>
+                        <th>Price</th>
+                        <th>Quantity</th>
+                        <th>Subtotal</th>
+                    </tr>
+                </thead>
+                <tbody hx-get="/api/basket/" hx-swap="none" hx-trigger="load" @htmx:after-request="$data.basket=JSON.parse(event.detail.xhr.response || '{}')">
+                    <template x-for="item in basket.items" :key="item.ref">
+                        <tr>
+                            <td><img :src="item.product.thumbnail" alt="" /></td>
+                            <td><a :href="'{% url 'product_page' slug='PLACEHOLDER' %}'.replace('PLACEHOLDER', item.product.slug)" x-text="item.product.name" class="fs-6"></a></td>
+                            <td x-text="item.unit_price" class="amt fs-6"></td>
+                            <td>
+                                <form :action="'/api/basket/'+item.ref+'/?basket'" :hx-put="'/api/basket/'+item.ref+'/?basket'" hx-trigger="change delay:1s, input delay:1s, submit delay:1s" method="put" x-init="htmx.process($el)">
+                                    {% csrf_token %}
+                                    <div class="d-flex qty">
+                                        <button class="btn btn-primary bi bi-dash-lg" @click="item.quantity - 1 < 1 ? item.quantity : item.quantity--"></button>
+                                        <input type="number" name="quantity" id="" class="form-control border-none" x-model.number="item.quantity" @input="if (item.quantity < 1) item.quantity = 1; if (item.quantity > 10) item.quantity = 10;">
+                                        <button class="btn btn-primary bi bi-plus-lg" @click="item.quantity + 1 > 10 ? item.quantity : item.quantity++"></button>
+                                    </div>
+                                </form>
+                            </td>
+                            <td x-text="item.subtotal" class="amt fs-6"></td>
+                        </tr>
+                    </template>
+                </tbody>
+            </table>
+        </div>
+        <div class="cart-totals">
+            <h2 class="section-title">Cart Totals</h2>
+            <div class="cart-total">
+                <div class="d-flex gap-3 justify-content-between align-items-center">
+                    <div class="fw-semibold fs-6">Subtotal</div>
+                    <div x-text="basket.subtotal" class="amt fs-6"></div>
+                </div>
+                <div class="d-flex gap-3 justify-content-between align-items-center">
+                    <div class="fw-semibold fs-6">Total</div>
+                    <div x-text="basket.total" class="amt fs-6"></div>
+                </div>
+            </div>
+            <a href="{% url 'checkout' %}" class="btn btn-primary fs-5 fw-semibold">Proceed to Checkout <span class="bi bi-arrow-right text-white"></span></a>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,44 @@
+{% load my_filters %}
+
+{% if not review_added %}
+<div role="alert" aria-live="assertive" aria-atomic="true" class="toast" data-bs-autohide="false">
+    <div class="toast-header">
+        <img src="..." class="rounded me-2" alt="...">
+        <strong class="me-auto">Bootstrap</strong>
+        <small>11 mins ago</small>
+        <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+    </div>
+    <div class="toast-body">
+        Hello, world! This is a toast message.
+    </div>
+</div>
+{% endif %}
+
+<form hx-post="{% url 'add_review' product_id=product.id %}" hx-swap="outerHTML" method="post" class="review-form mt-4" novalidate>
+    {% csrf_token %}
+    {% for field in review_form %}
+    <div>
+        {{ field.label_tag }}
+        {% if field|widget_type == "RadioSelect" %}
+        <div class="rating">
+            {% for radio in field %}
+            <label>
+                {{ radio.tag }}
+                <div class="d-flex flex-column">
+                    <span class="bi bi-star d-flex"></span>
+                    <span class="bi bi-star-fill d-flex"></span>
+                </div>
+            </label>
+            {% endfor %}
+        </div>
+        {% else %}
+        {{ field }}
+        {% endif %}
+        {% if field.errors %}
+        {{ field.errors }}
+        {% endif %}
+    </div>
+    {% endfor %}
+    <button class="btn btn-outline-primary fw-semibold">Submit</button>
+    {% include "components/htmx_indicator.html" %}
+</form>

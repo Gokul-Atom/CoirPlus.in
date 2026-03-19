@@ -1,0 +1,69 @@
+<div class="d-flex flex-column flex-md-row gap-3 w-100">
+    <div class="w-100">
+        {{ form.first_name.label_tag }}
+        {{ form.first_name }}
+        {{ form.first_name.errors }}
+    </div>
+    <div class="w-100">
+        {{ form.last_name.label_tag }}
+        {{ form.last_name }}
+        {{ form.last_name.errors }}
+    </div>
+</div>
+<div>
+    {{ form.email.label_tag }}
+    {{ form.email }}
+    {{ form.email.errors }}
+</div>
+<div>
+    {{ form.company.label_tag }}
+    {{ form.company }}
+    {{ form.company.errors }}
+</div>
+<div>
+    {{ form.address1.label_tag }}
+    {{ form.address1 }}
+    {{ form.address1.errors }}
+</div>
+<div>
+    {{ form.address2.label_tag }}
+    {{ form.address2 }}
+    {{ form.address2.errors }}
+</div>
+<div>
+    {{ form.city.label_tag }}
+    {{ form.city }}
+    {{ form.city.errors }}
+</div>
+<div>
+    {{ form.state.label_tag }}
+    {{ form.state }}
+    {{ form.state.errors }}
+</div>
+<div>
+    {{ form.country.label_tag }}
+    {{ form.country }}
+    {{ form.country.errors }}
+</div>
+<div>
+    {{ form.zip.label_tag }}
+    {{ form.zip }}
+    {{ form.zip.errors }}
+</div>
+<div>
+    {{ form.landmark.label_tag }}
+    {{ form.landmark }}
+    {{ form.landmark.errors }}
+</div>
+<div>
+    {{ form.phone_number.label_tag }}
+    {{ form.phone_number }}
+    {{ form.phone_number.errors }}
+</div>
+{{ form.is_billing }}
+
+{% if form.prefix == "billing" %}
+{{ form.is_shipping }}
+{% else %}
+<input type="checkbox" name="shipping-is_shipping" class="form-check-input" aria-describedby="id_shipping-is_shipping_helptext" id="id_shipping-is_shipping" :checked="open">
+{% endif %}

@@ -1,0 +1,215 @@
+{% load wagtailcore_tags wagtailimages_tags my_filters my_tags menu_tags %}
+{% with common_settings=settings.common.SiteSettings %}
+<header class="sticky-top">
+    {% if common_settings.contact_numbers or common_settings.contact_emails %}
+    <nav class="nav-top d-lg-none">
+        <div class="d-flex justify-content-between p-2">
+            {% if common_settings.contact_numbers %}
+            <a class="nav-link d-flex align-items-center gap-2" href="tel:{{ common_settings.contact_numbers|first_line|cut:' ' }}">
+                <span class="d-flex bi bi-phone fs-4"></span>
+                <small>{{ common_settings.contact_numbers|first_line }}</small>
+            </a>
+            {% endif %}
+            {% if common_settings.contact_emails %}
+            <a class="nav-link d-flex align-items-center gap-2" href="mailto:{{ common_settings.contact_emails|first_line }}">
+                <span class="d-flex bi bi-envelope fs-4"></span>
+                <small>{{ common_settings.contact_emails|first_line }}</small>
+            </a>
+            {% endif %}
+        </div>
+    </nav>
+    {% endif %}
+    <nav class="navbar navbar-expand-lg d-flex flex-column py-0 cart-qty" x-transition.opacity hx-get="/api/basket/quantity/" hx-swap="none" hx-trigger="load, refreshCartQuantity, htmx:afterRequest from:#basket-form" @htmx:after-request="$data.count=JSON.parse(event.detail.xhr.response).quantity" x-data="{count: 0}">
+        <div class="container-fluid flex-nowrap flex-md-wrap gap-2 gap-md-5 py-2">
+            <a class="navbar-brand" href="{% site_root %}">
+                {% image common_settings.logo format-webp width-200 class="brand-logo" %}
+                <span class="visually-hidden">CoirPlus</span>
+            </a>
+            <div class="d-lg-none">
+                <button class="btn position-relative" type="button" data-bs-toggle="offcanvas" data-bs-target="#cart-offcanvas" aria-controls="cart-offcanvas">
+                    <span class="bi bi-bag fs-3"></span>
+                    <span class="visually-hidden">Cart</span>
+                    <small class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                        <span class="text-white fw-semibold" x-text="count"></span>
+                        <small class="visually-hidden">items in cart</small>
+                    </small>
+                </button>
+
+                <!-- Button trigger modal -->
+                <button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#search-modal">
+                    <span class="bi bi-search fs-3"></span>
+                    <span class="visually-hidden">Search</span>
+                </button>
+
+                <button class="btn" type="button" data-bs-toggle="offcanvas" data-bs-target="#menu-offcanvas" aria-controls="menu-offcanvas">
+                    <span class="bi bi-list fs-3"></span>
+                    <span class="visually-hidden">Menu</span>
+                </button>
+            </div>
+
+            <div class="collapse navbar-collapse">
+                <form class="d-flex position-relative w-100 search-form nav-search-form" role="search" action="{% pageurl common_settings.shop_page %}">
+                    <input class="form-control rounded-pill" type="search" name="q" placeholder="Search" value="{{ request.GET.q }}" aria-label="Search" />
+                    <div class="position-absolute">
+                        <button class="btn btn-primary rounded-pill" type="submit"><span class="bi bi-search"></span><span class="visually-hidden">Search</span></button>
+                    </div>
+                </form>
+            </div>
+
+            <div class="d-none d-lg-flex gap-3 align-items-center">
+                <div>
+                    <span class="bi bi-headset fs-1 text-tertiary"></span>
+                </div>
+                <div class="d-flex flex-column gap-1">
+                    <span>Call us now: <a class="text-decoration-none" href="tel:{{ common_settings.contact_numbers|first_line|cut:' ' }}" target="_blank" rel="noopener noreferrer">{{ common_settings.contact_numbers|first_line }}</a></span>
+                    <span>Email: <a class="text-decoration-none" href="mailto:{{ common_settings.contact_emails|first_line }}" target="_blank" rel="noopener noreferrer">{{ common_settings.contact_emails|first_line }}</a></span>
+                </div>
+            </div>
+        </div>
+        <div class="d-none d-lg-flex align-items-center justify-content-between w-100">
+            <div class="d-flex align-items-center gap-2">
+                <div>
+                    <button class="btn d-flex align-items-center gap-2" type="button" data-bs-toggle="offcanvas" data-bs-target="#menu-offcanvas" aria-controls="menu-offcanvas">
+                        <span class="bi bi-list fs-3"></span>
+                        <span>All Categories</span>
+                    </button>
+                </div>
+                <div>
+                    <span class="vr"></span>
+                </div>
+                <div class="d-flex gap-3">
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                        {% flat_menu "main_menu" template="menus/header_menu.html" %}
+                    </ul>
+                </div>
+            </div>
+
+            <div class="d-flex align-items-center gap-2">
+                <button class="btn position-relative" type="button" data-bs-toggle="offcanvas" data-bs-target="#cart-offcanvas" aria-controls="cart-offcanvas">
+                    <span class="bi bi-bag fs-3"></span>
+                    <span class="visually-hidden">Cart</span>
+                    <small class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                        <span class="text-white fw-semibold" x-text="count"></span>
+                        <small class="visually-hidden">items in cart</small>
+                    </small>
+                </button>
+
+                <!-- Button trigger modal -->
+                <a href="#" class="btn">
+                    <span class="bi bi-person fs-3"></span>
+                    <span class="visually-hidden">Search</span>
+                </a>
+            </div>
+
+        </div>
+    </nav>
+</header>
+
+<div class="offcanvas offcanvas-end" data-bs-backdrop="static" tabindex="-1" id="cart-offcanvas" aria-labelledby="cart-offcanvasLabel">
+    <div class="offcanvas-header border-bottom">
+        <h5 class="offcanvas-title fw-semibold" id="cart-offcanvasLabel">My Cart</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    <div class="offcanvas-body">
+        <div class="d-flex flex-column justify-content-between" x-data="{basket: {}}" hx-get="/api/basket/" hx-swap="none" hx-trigger="load" @htmx:after-request="$data.basket = JSON.parse(event.detail.xhr.response || '{}')">
+            <div class="d-flex flex-column basket">
+                <template x-for="(item, index) in basket.items" :key="item.ref">
+                    <div class="d-flex flex-column">
+                        <div class="d-flex align-items-center justify-content-between gap-3">
+                            <div class="d-flex gap-3 basket-item">
+                                <img :src="item.product.thumbnail" alt="" srcset="">
+                                <div class="d-flex flex-column gap-2">
+                                    <span class="fs-6 fw-semibold" x-text="item.product.name"></span>
+                                    <span x-text="item.unit_price" class="fs-5 amt fw-semibold"></span>
+                                    <span x-text="'x ' + item.quantity" class="qty fw-semibold"></span>
+                                </div>
+                            </div>
+                            <div>
+                                <button class="btn fw-semibold" :hx-delete="`/api/basket/${item.ref}/?basket`" hx-confirm="Are you sure to delete this item from your cart?" x-init="htmx.process($el)" hx-trigger="click" hx-swap="none"><span class="bi bi-x-lg text-danger"></span></button>
+                            </div>
+                        </div>
+                        <hr x-show="index < basket.items.length - 1">
+                    </div>
+                </template>
+                <template x-if="!basket?.items?.length">
+                    <div>Empty basket</div>
+                </template>
+            </div>
+            <div class="subtotal">
+                <div class="d-flex justify-content-between gap-3 flex-wrap">
+                    <span x-text="'Subtotal:'" class="fs-5 fw-semibold" x-show="basket.subtotal"></span>
+                    <span x-text="basket.subtotal" class="amt fs-4 fw-semibold" x-show="basket.subtotal"></span>
+                </div>
+                <div class="d-flex gap-3">
+                    <a class="btn btn-primary w-100" href="{% pageurl common_settings.cart_page %}">View Cart</a>
+                    <a class="btn btn-primary w-100" href="{% pageurl common_settings.checkout_page %}">Checkout</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="offcanvas offcanvas-start" data-bs-backdrop="static" tabindex="-1" id="menu-offcanvas" aria-labelledby="menu-offcanvasLabel">
+    <div class="offcanvas-header">
+        <div class="offcanvas-title fs-5" id="menu-offcanvasLabel">CoirPlus</div>
+        <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    <div class="offcanvas-body">
+        <ul class="nav nav-pills justify-content-center mb-4" id="menu" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active" id="menu-tab" data-bs-toggle="tab" data-bs-target="#menu-tab-pane" type="button" role="tab" aria-controls="menu-tab-pane" aria-selected="true">Menu</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="category-tab" data-bs-toggle="tab" data-bs-target="#category-tab-pane" type="button" role="tab" aria-controls="category-tab-pane" aria-selected="false">Categories</button>
+            </li>
+        </ul>
+        <div class="tab-content" id="menuContent">
+            <div class="tab-pane fade show active" id="menu-tab-pane" role="tabpanel" aria-labelledby="menu-tab" tabindex="0">
+                <ul class="list-unstyled d-flex flex-column gap-3">
+                    {% flat_menu "main_menu" template="menus/header_menu.html" %}
+                </ul>
+            </div>
+            <div class="tab-pane fade" id="category-tab-pane" role="tabpanel" aria-labelledby="category-tab" tabindex="0">
+                <div class="d-flex flex-column gap-3">
+                    {% for category in parent_categories %}
+                    <div class="btn-group">
+                        <a href="{% pageurl shop_page %}?category={{ category.slug }}" class="nav-link">{{ category.title }}</a>
+                        {% comment %}
+                        <button type="button" class="btn dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                            <span class="visually-hidden">Toggle Dropend</span>
+                        </button>
+                        <ul class="dropdown-menu">
+                            {% for child_category in category.get_descendants %}
+                            <li>
+                                {{ child_category.title }}
+                            </li>
+                            {% endfor %}
+                        </ul>
+                        {% endcomment %}
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="search-modal" tabindex="-1" aria-labelledby="search-modalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="search-modalLabel">Modal title</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                ...
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary">Save changes</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endwith %}

@@ -1,0 +1,70 @@
+.home-hero-section > .d-grid {
+  gap: 1rem;
+}
+@media screen and (min-width: 768px) {
+  .home-hero-section > .d-grid {
+    grid-template-columns: 4fr 8fr;
+  }
+}
+@media screen and (min-width: 992px) {
+  .home-hero-section > .d-grid {
+    grid-template-columns: 3fr 9fr;
+  }
+}
+.home-hero-section > .d-grid .banners {
+  display: grid;
+  grid-template-columns: 12fr;
+}
+@media screen and (min-width: 576px) {
+  .home-hero-section > .d-grid .banners {
+    grid-template-columns: 8fr 4fr;
+  }
+}
+@media screen and (min-width: 768px) {
+  .home-hero-section > .d-grid .banners {
+    grid-template-columns: 12fr;
+  }
+}
+@media screen and (min-width: 992px) {
+  .home-hero-section > .d-grid .banners {
+    grid-template-columns: 8fr 4fr;
+  }
+}
+.home-hero-section > .d-grid .banners-small {
+  display: grid;
+}
+@media screen and (min-width: 768px) {
+  .home-hero-section > .d-grid .banners-small {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+@media screen and (min-width: 992px) {
+  .home-hero-section > .d-grid .banners-small {
+    grid-template-columns: 12fr;
+  }
+}
+.home-hero-section > .d-grid .banners,
+.home-hero-section > .d-grid .banners-small {
+  gap: 1rem;
+}
+.home-hero-section > .d-grid .banners .splide__slide img,
+.home-hero-section > .d-grid .banners-small .splide__slide img {
+  aspect-ratio: 4/3;
+  -o-object-fit: cover;
+     object-fit: cover;
+  height: auto;
+  border-radius: 1rem;
+}
+
+.home-outro * {
+  color: #54595F;
+  font-size: 0.8rem;
+}
+.home-outro h2 {
+  color: #54595F;
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+.home-outro a {
+  color: #769840;
+}/*# sourceMappingURL=homepage.css.map */

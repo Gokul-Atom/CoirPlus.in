@@ -1,0 +1,27 @@
+<section class="reviews-section">
+    <div class="review-update">
+        <div class="mb-4">
+            {% with ratings=product.ratings %}
+            <div class="d-flex flex-wrap gap-3">
+                <span class="bi bi-star-fill fs-2"></span>
+                <span class="fs-2 h">
+                    {{ ratings.avg_rating }} / 5
+                </span>
+            </div>
+            Based on <strong>{{ ratings.reviews_count }}</strong> ratings
+            {% endwith %}
+        </div>
+        <div class="fs-4 h">
+            {% if product_reviews %}
+            Write a review for
+            {% else %}
+            Be the first to review
+            {% endif %}
+            “{{ product.title }}”
+        </div>
+        {% include "components/review_form.html" %}
+    </div>
+    <div class="d-flex flex-column gap-3 reviews" hx-get="{% url 'get_reviews' product_id=product.id %}" hx-trigger="refresh from:body" id="reviews">
+        {% include "components/reviews.html" with product_reviews=product_reviews %}
+    </div>
+</section>

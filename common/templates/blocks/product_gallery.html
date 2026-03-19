@@ -1,0 +1,15 @@
+{% load wagtailcore_tags wagtailimages_tags %}
+
+<div class="d-flex flex-column gap-3 product-gallery">
+    {% for image in self.images %}
+    {% if image.link %}
+    <a href="{{ image.link }}">
+        {% elif image.page %}
+        <a href="{% pageurl image.page %}">
+            {% endif %}
+            {% image image.image original format-webp class="d-block w-100 h-auto" %}
+            {% if image.link or image.page %}
+        </a>
+        {% endif %}
+        {% endfor %}
+</div>

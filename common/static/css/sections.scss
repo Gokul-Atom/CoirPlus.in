@@ -1,0 +1,250 @@
+@import "../../../coirplus/static/css/variables";
+
+.home-hero-section {
+  .menu {
+    background: $background-muted;
+    .menu-title {
+      border-radius: $border-radius $border-radius 0 0;
+      display: flex;
+      align-items: center;
+      background: $primary;
+      .bi {
+        color: white;
+      }
+      color: white;
+    }
+    .menu-title,
+    ul {
+      padding: 0.6rem 1rem;
+    }
+    ul {
+      border-radius: 0 0 $border-radius $border-radius;
+      border: 1px solid $border;
+      border-top: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 0.8rem;
+      li {
+        a {
+          font-weight: 600;
+          font-size: 1.1rem;
+        }
+      }
+    }
+  }
+}
+
+.icon-cards {
+  display: grid;
+  gap: 1rem;
+  padding: 1rem;
+  grid-template-columns: 12fr;
+  @media screen and (min-width: 576px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  @media screen and (min-width: 768px) {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  @media screen and (min-width: 992px) {
+    grid-template-columns: repeat(5, 1fr);
+  }
+  .icon-card {
+    cursor: pointer;
+    border: 1px solid $border;
+    border-radius: $border-radius;
+    padding: 1rem;
+    & > div {
+      text-align: center;
+    }
+    .icon {
+      max-width: 120px;
+      margin-bottom: 1rem;
+    }
+    .card-title {
+      font-weight: 600;
+    }
+    transition: all ease 300ms;
+    &:hover {
+      background: $background;
+      @media screen and (min-width: 992px) {
+        transform: translateY(-10px);
+      }
+    }
+  }
+}
+
+.material-section {
+  .material-cards {
+    padding: 1rem 0;
+    display: grid;
+    gap: 1rem;
+    @media screen and (min-width: 768px) {
+      grid-template-columns: repeat(2, 1fr);
+    }
+    @media screen and (min-width: 1200px) {
+      grid-template-columns: repeat(4, 1fr);
+    }
+    .material-card {
+      position: relative;
+      border-radius: $border-radius;
+      overflow: hidden;
+      .material-content {
+        position: absolute;
+        width: 100%;
+        bottom: 0;
+        left: 0;
+        border-radius: $border-radius;
+        padding: 1rem;
+        background: #00000066;
+        transition: background ease 300ms;
+        .card-title {
+          color: white;
+          font-weight: 500;
+        }
+        .card-content * {
+          color: #ffffffd9;
+          font-weight: 500;
+          display: none;
+          overflow: hidden;
+        }
+      }
+      &:hover {
+        .material-content {
+          background: #000000b0;
+          .card-content * {
+            display: block;
+          }
+        }
+      }
+    }
+  }
+}
+
+.benefit-section {
+  .benefit-grid {
+    display: grid;
+    margin-top: 1rem;
+    gap: 1rem;
+    @media screen and (min-width: 768px) {
+      grid-template-columns: 4fr 8fr;
+    }
+    @media screen and (min-width: 992px) {
+      align-items: center;
+      grid-template-columns: 3fr 6fr 3fr;
+    }
+    .main-image {
+      border-radius: $border-radius;
+      border: 1px solid $border;
+      box-shadow:
+        0 0 10px $border,
+        0 0 4px $secondary;
+      @media screen and (max-width: 992px) {
+        position: -webkit-sticky;
+        position: sticky;
+        top: 7.5rem;
+      }
+    }
+    div:has(> .main-image) {
+      @media screen and (min-width: 768px) {
+        grid-row: 1 / span 2;
+        grid-column: 2;
+      }
+    }
+    div {
+      &:has(.benefit-card) {
+        display: grid;
+        gap: 1rem;
+      }
+      .benefit-card {
+        display: grid;
+        gap: 0.5rem;
+        grid-template-columns: 1fr 2fr;
+        @media screen and (min-width: 768px) {
+          grid-template-columns: repeat(2, 1fr);
+        }
+        .card-title {
+          margin: 1rem 0 0.5rem;
+          line-height: 1;
+          font-weight: 500;
+        }
+        .card-content {
+          font-size: 1.1em;
+        }
+      }
+    }
+  }
+}
+
+.mattress-size-section {
+  .size-cards {
+    display: grid;
+    gap: 1rem;
+    margin-top: 1rem;
+    @media screen and (min-width: 576px) {
+      grid-template-columns: repeat(2, 1fr);
+    }
+    @media screen and (min-width: 768px) {
+      grid-template-columns: repeat(3, 1fr);
+    }
+    @media screen and (min-width: 1200px) {
+      grid-template-columns: repeat(5, 1fr);
+    }
+    .size-card {
+      .image {
+        border-radius: $border-radius;
+        border: 1px solid $primary;
+      }
+      .card-title {
+        font-weight: 600;
+      }
+    }
+  }
+}
+
+.cta-section {
+  padding: 4rem;
+  margin: 1rem;
+  border-radius: $border-radius;
+  overflow: hidden;
+  img {
+    object-fit: cover;
+    z-index: -1;
+    transition: all ease 300ms;
+  }
+  &:hover {
+    img {
+      transform: scale(1.05);
+      filter: saturate(0);
+    }
+  }
+  & > div {
+    display: grid;
+    align-items: center;
+    justify-items: center;
+    gap: 2rem;
+    @media screen and (min-width: 768px) {
+      grid-template-columns: repeat(2, 1fr);
+    }
+    .cta-title,
+    .cta-title * {
+      color: white !important;
+    }\
+    .cta-button {
+      padding: 0.5rem 2rem;
+    }
+  }
+}
+
+.two-column-image-block {
+  display: grid;
+  gap: 0.1rem;
+  @media screen and (min-width: 992px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.product-gallery {
+    img {
+        border-radius: $border-radius;
+    }
+}

@@ -1,0 +1,59 @@
+@import "../../../coirplus/static/css/mixins";
+
+.home-hero-section {
+  & > .d-grid {
+    gap: 1rem;
+    @media screen and (min-width: 768px) {
+      grid-template-columns: 4fr 8fr;
+    }
+    @media screen and (min-width: 992px) {
+      grid-template-columns: 3fr 9fr;
+    }
+    .banners {
+        display: grid;
+      grid-template-columns: 12fr;
+      @media screen and (min-width: 576px) {
+        grid-template-columns: 8fr 4fr;
+      }
+      @media screen and (min-width: 768px) {
+        grid-template-columns: 12fr;
+      }
+      @media screen and (min-width: 992px) {
+        grid-template-columns: 8fr 4fr;
+      }
+    }
+    .banners-small {
+      display: grid;
+      @media screen and (min-width: 768px) {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      @media screen and (min-width: 992px) {
+        grid-template-columns: 12fr;
+      }
+    }
+    .banners,
+    .banners-small {
+      gap: 1rem;
+      .splide__slide {
+        img {
+          aspect-ratio: 4/3;
+          object-fit: cover;
+          height: auto;
+          border-radius: 1rem;
+        }
+      }
+    }
+  }
+}
+
+.home-outro {
+    * {
+        @include body();
+    }
+    h2 {
+        @include heading();
+    }
+    a {
+        color: $primary;
+    }
+}

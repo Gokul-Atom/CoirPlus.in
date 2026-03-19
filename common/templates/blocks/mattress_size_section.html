@@ -1,0 +1,23 @@
+{% load wagtailcore_tags wagtailimages_tags %}
+<section class="p-3 mattress-size-section">
+    <h2 class="section-title">{{ self.heading }}</h2>
+    <div class="size-cards">
+        {% for card in self.cards %}
+        <div class="size-card">
+            {% if card.link %}
+            <a href="{{ card.link }}" class="text-decoration-none" title="{{ card.title }}">
+                {% elif card.page %}
+                <a href="{% pageurl card.page %}" class="text-decoration-none" title="{{ card.title }}">
+                    {% endif %}
+                    {% image card.image|default:placeholder_image width-500 format-webp class="d-block w-100 h-auto mx-auto image" %}
+                    <div class="text-center">
+                        <div class="card-title fs-4 h">{{ card.title }}</div>
+                        <div class="card-content">{% include_block card.description %}</div>
+                    </div>
+                    {% if card.link or card.page %}
+                </a>
+                {% endif %}
+        </div>
+        {% endfor %}
+    </div>
+</section>

@@ -1,0 +1,31 @@
+{% load wagtailcore_tags wagtailimages_tags %}
+<section class="p-3 benefit-section">
+    <h2 class="section-title">{{ self.heading }}</h2>
+    <div class="benefit-grid">
+        <div>
+            {% for card in self.cards_group_1 %}
+            <div class="benefit-card">
+                {% image card.image|default:placeholder_image width-500 format-webp class="d-block w-100 h-auto mx-auto image" %}
+                <div class="content benefit-content">
+                    <div class="card-title fs-4 h">{{ card.title }}</div>
+                    <div class="card-content">{% include_block card.description %}</div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        <div>
+            {% image self.main_image width-800 format-webp class="d-block w-100 h-auto main-image" %}
+        </div>
+        <div>
+            {% for card in self.cards_group_2 %}
+            <div class="benefit-card">
+                {% image card.image|default:placeholder_image width-500 format-webp class="d-block w-100 h-auto mx-auto image" %}
+                <div class="content benefit-content">
+                    <div class="card-title fs-4 h">{{ card.title }}</div>
+                    <div class="card-content">{% include_block card.description %}</div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>

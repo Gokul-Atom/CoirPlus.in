@@ -1,0 +1,107 @@
+@import "variables";
+
+header {
+  background: white;
+  nav {
+    &.nav-top {
+      .bi {
+        font-size: 0.8em;
+      }
+    }
+    &.navbar > div {
+      @media screen and (max-width: 992px) {
+        height: 64px;
+      }
+    }
+    & > div {
+      border-bottom: 1px solid $border;
+    }
+    .brand-logo {
+      max-height: 80px;
+      width: 100%;
+      @media screen and (max-width: 992px) {
+        max-width: 100%;
+        width: 100px;
+        object-fit: contain;
+      }
+    }
+    .search-form {
+      $padding: 4px;
+      border-radius: 50rem;
+      border: 2px solid $primary;
+      padding: $padding;
+      input {
+        padding: 0.5rem 1rem;
+        border: none;
+        box-shadow: none !important;
+      }
+      div {
+        top: 50%;
+        right: $padding;
+        transform: translateY(-50%);
+        button {
+          border-radius: 50rem !important;
+          aspect-ratio: 1;
+          .bi {
+            color: white;
+          }
+        }
+      }
+    }
+  }
+}
+
+#cart-offcanvas {
+  .offcanvas-body {
+    & > div {
+      height: 100%;
+      .basket {
+        overflow-y: auto;
+        padding-bottom: 1rem;
+        .basket-item {
+          .amt {
+            color: $primary;
+          }
+          .qty {
+            color: $tertiary;
+          }
+        }
+      }
+      .subtotal {
+        padding: 1rem;
+        border-top: 1px solid $border;
+      }
+    }
+  }
+}
+#menu-offcanvas {
+  .nav-pills {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    .nav-item {
+      border: 1px solid $primary;
+      .nav-link {
+        width: 100%;
+        border-radius: 0;
+        color: $primary;
+        &.active {
+          color: white;
+          font-weight: bold;
+          background: $primary;
+        }
+      }
+      &:first-child {
+        border-radius: 50rem 0 0 50rem;
+        .nav-link {
+          border-radius: 50rem 0 0 50rem;
+        }
+      }
+      &:last-child {
+        border-radius: 0 50rem 50rem 0;
+        .nav-link {
+          border-radius: 0 50rem 50rem 0;
+        }
+      }
+    }
+  }
+}

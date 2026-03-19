@@ -1,0 +1,19 @@
+{% load wagtailimages_tags wagtailcore_tags %}
+
+<div class="image-block">
+    {% if self.link %}
+    <a href="{{ self.link }}">
+        {% elif self.page %}
+        <a href="{% pageurl self.page %}">
+            {% endif %}
+
+            {% image self.small_screen_image width-800 format-webp as small_img %}
+            {% image self.large_screen_image width-1600 format-webp as large_img %}
+            <picture>
+                <source media="(min-width: 768px)" srcset="{{ large_img.url }}">
+                <img src="{{ small_img.url }}" alt="{{ self.small_screen_image.alt_text|default:self.large_screen_image.alt_text|default:'' }}" class="d-block w-100">
+            </picture>
+            {% if self.link or self.page %}
+        </a>
+        {% endif %}
+</div>

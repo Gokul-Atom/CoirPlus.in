@@ -1,0 +1,10 @@
+<div class="fs-5 fw-semibold">{{ menu_heading }}</div>
+<ul class="list-unstyled">
+    {% for item in menu_items %}
+    <li class="nav-item">
+        <a href="{{ item.href }}" class="nav-link">
+            {{ item.text }}
+        </a>
+    </li>
+    {% endfor %}
+</ul>

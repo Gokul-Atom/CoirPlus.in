@@ -1,0 +1,32 @@
+{% load wagtailcore_tags %}
+<section class="p-3 home-hero-section">
+    <div class="d-grid">
+        <div>
+            <div class="menu d-none d-md-block">
+                <div class="fs-5 fw-semibold menu-title"><span class="bi bi-list fs-3 me-2"></span>All Mattresses</div>
+                <ul class="list-unstyled mb-0">
+                    {% for category in parent_categories %}
+                    <li class="nav-item">
+                        <a href="{% pageurl shop_page %}?category={{ category.slug }}" class="nav-link">
+                            {{ category.title }}
+                        </a>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+        <div class="banners">
+            <div>
+                {% include "components/carousel.html" with carousel=self.banner1 %}
+            </div>
+            <div class="banners-small">
+                <div>
+                    {% include "components/carousel.html" with carousel=self.banner2 %}
+                </div>
+                <div>
+                    {% include "components/carousel.html" with carousel=self.banner3 %}
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

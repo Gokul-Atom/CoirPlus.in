@@ -1,0 +1,20 @@
+{% csrf_token %}
+<h2 class="fw-semibold">Billing Address</h2>
+<div class="d-flex flex-column gap-3 billing">
+    {% with form=billing_form %}
+    {% include "components/form_template.html" %}
+    {% endwith %}
+</div>
+
+<div x-data="{open: {{ different_shipping_address|yesno:'true,false' }} }" class="mt-3">
+    <hr class="my-4">
+    <h2>
+        <input type="checkbox" name="different_shipping_address" id="different_shipping_address" x-model="open" class="form-check-input fs-1 mt-0">
+        <label class="fw-semibold fs-2" for="different_shipping_address">Ship to different address?</label>
+    </h2>
+    <div class="d-flex flex-column gap-3 shipping mt-3" :class="{'show': open}">
+        {% with form=shipping_form %}
+        {% include "components/form_template.html" %}
+        {% endwith %}
+    </div>
+</div>
