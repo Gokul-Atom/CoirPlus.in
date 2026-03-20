@@ -7,9 +7,10 @@ from django.core.exceptions import ValidationError
 from django.http import HttpResponse
 from django.urls import reverse
 from django.views.decorators.csrf import csrf_exempt
-
+from django.contrib.auth.decorators import login_required
 
 # Create your views here.
+@login_required
 def checkout_page(request):
     basket = get_object_or_404(Basket, user=request.user)
     if request.method == "POST":
@@ -61,6 +62,7 @@ def checkout_page(request):
     })
 
 
+@login_required
 def payment_page(request, token):
     order = Order.objects.filter(token=token).first()
     context = {
@@ -70,13 +72,14 @@ def payment_page(request, token):
     return TemplateResponse(request, "account_manager/payment_page.html", context=context)
 
 
+@login_required
 @csrf_exempt
 def payment_success_view(request, token):
-    print(request.POST)
     order = Order.objects.filter(token=token).first()
     order_id = request.POST.get('razorpay_order_id')
     payment_id = request.POST.get('razorpay_payment_id')
     signature = request.POST.get('razorpay_signature')
+    print(request.POST)
     params_dict = {
         'razorpay_order_id': order_id,
         'razorpay_payment_id': payment_id,
@@ -91,3 +94,28 @@ def payment_success_view(request, token):
         order.save()
         return render(request, 'account_manager/payment_success.html')
     return render(request, 'account_manager/payment_failure.html')
+
+
+@login_required
+def my_orders(request):
+    context = {}
+    return TemplateResponse(request, "account_manager/my_orders.html", context=context)
+
+
+@login_required
+def view_order(request, order_ref):
+    order = get_object_or_404(Order, ref=order_ref, user=request.user)
+    context = {"order": order}
+    return TemplateResponse(request, "account_manager/view_order.html", context=context)
+
+
+@login_required
+def my_addresses(request):
+    context = {}
+    return TemplateResponse(request, "account_manager/my_addresses.html", context=context)
+
+
+@login_required
+def my_account_details(request):
+    context = {}
+    return TemplateResponse(request, "account_manager/my_account_details.html", context=context)

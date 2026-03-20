@@ -8,7 +8,7 @@
             {% endwith %}
         </a>
         <template x-if="selected_variation">
-            <form action="/api/basket/" hx-post="/api/basket/" method="post" hx-swap="none" @htmx:after-request="htmx.trigger('.cart-qty, .cart-qty-m', 'refreshCartQuantity')" x-init="htmx.process($el)">
+            <form action="/api/basket/" hx-post="/api/basket/" method="post" hx-swap="none" @htmx:after-request="htmx.trigger('.cart-qty', 'refreshCartQuantity'); document.querySelector('*[data-bs-target=\'#cart-offcanvas\']').click();" x-init="htmx.process($el)">
                 {% csrf_token %}
                 <input type="hidden" name="product_type" value="store_manager.ProductVariation">
                 <input type="hidden" name="product_id" :value="selected_variation">

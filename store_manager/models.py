@@ -72,6 +72,9 @@ class ProductImage(ImageMixin, Orderable):
     variation = ParentalKey("store_manager.ProductVariation", on_delete=models.CASCADE, related_name="images", blank=True, null=True)
     panels = ImageMixin.panels
 
+    class Meta(Orderable.Meta):
+        pass
+
 
 class Product(SEOMixin, SEOExtraMixin, TimestampMixin, ClusterableModel):
     categories = ParentalManyToManyField(
@@ -176,6 +179,15 @@ class Product(SEOMixin, SEOExtraMixin, TimestampMixin, ClusterableModel):
                     attributes[attribute].append(value)
         return {"keys": attributes.keys(), "attributes": attributes}
     
+    @property
+    def thumbnail(self):
+        images = self.images.all()
+        from common.settings import SiteSettings
+        common_settings = SiteSettings.load()
+        thumb = images[0].image if images else common_settings.placeholder_image
+        rendition = thumb.get_rendition("fill-100x100")
+        return rendition.url
+    
     def __str__(self):
         return self.title
 
@@ -248,6 +260,16 @@ class ProductVariation(TimestampMixin, ClusterableModel, Orderable, models.Model
         thumb = images[0].image if images else common_settings.placeholder_image
         rendition = thumb.get_rendition("fill-100x100")
         return rendition.url
+    
+    @property
+    def attributes_list(self):
+        attrs_list = []
+        for attribute in self.attributes.all():
+            attrs_list.append({
+                "attribute": attribute.attribute.name,
+                "value": attribute.value,
+            })
+        return attrs_list
     
     @property
     def slug(self):

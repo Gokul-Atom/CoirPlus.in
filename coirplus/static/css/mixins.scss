@@ -10,3 +10,9 @@
     color: $secondary;
     font-size: 0.8rem;
 }
+
+@mixin container($padding: 1rem) {
+  box-shadow: 0 0 6px $border;
+  padding: $padding;
+  border-radius: $border-radius;
+}

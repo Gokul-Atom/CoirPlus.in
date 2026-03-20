@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% load wagtailcore_tags static my_tags %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/my_account.css' %}{% static_timestamp %}">
+{% endblock %}
+
+{% block content %}
+<div class="py-5 px-3">
+    <h1>My Account</h1>
+
+    <div class="my-account">
+        <div class="account-menu">
+            <ul class="list-unstyled d-flex flex-column mb-0">
+                {% pageurl settings.common.SiteSettings.account_page as url %}
+                <li class="nav-link {% if request.path == url %}active{% endif %}">
+                    <a href="{% pageurl settings.common.SiteSettings.account_page %}">
+                        <span class="bi bi-bar-chart-steps"></span>
+                        <span>Dashboard</span>
+                    </a>
+                </li>
+                {% url 'my_orders' as url %}
+                <li class="nav-link {% if request.path == url %}active{% endif %}">
+                    <a href="{{ url }}">
+                        <span class="bi bi-box-seam"></span>
+                        <span>Orders</span>
+                    </a>
+                </li>
+                {% url 'my_addresses' as url %}
+                <li class="nav-link {% if request.path == url %}active{% endif %}">
+                    <a href="{{ url }}">
+                        <span class="bi bi-globe-central-south-asia"></span>
+                        <span>Address</span>
+                    </a>
+                </li>
+                {% url 'my_account_details' as url %}
+                <li class="nav-link {% if request.path == url %}active{% endif %}">
+                    <a href="{{ url }}">
+                        <span class="bi bi-person-fill-gear"></span>
+                        <span>Account Details</span>
+                    </a>
+                </li>
+                <li class="nav-link">
+                    <a href="{% url 'account_logout' %}">
+                        <span class="bi bi-box-arrow-right"></span>
+                        <span>Logout</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+        <div class="account-main">
+            {% block account_content %}
+            {% endblock %}
+        </div>
+    </div>
+</div>
+{% endblock %}

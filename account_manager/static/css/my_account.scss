@@ -1,0 +1,113 @@
+@import "../../../coirplus/static/css/variables";
+@import "../../../coirplus/static/css/mixins";
+
+.my-account {
+  display: grid;
+  gap: 2rem;
+  padding: 1rem 0;
+  @media screen and (min-width: 992px) {
+    grid-template-columns: 400px auto;
+  }
+  .account-menu {
+    border-radius: 1rem;
+    border: 1px solid $primary;
+    max-width: 400px;
+    ul {
+      padding: 0.5rem 0;
+      .nav-link {
+        a {
+          display: flex;
+          gap: 1.5rem;
+          padding: 0.75rem 1rem;
+          width: 100%;
+          align-items: center;
+          span {
+            font-size: 1.15rem;
+            &.bi {
+              font-size: 1.5rem;
+            }
+          }
+        }
+        &.active {
+          background: $primary;
+          a {
+            span {
+              color: white;
+              font-weight: bold;
+            }
+          }
+        }
+        &:hover {
+          background: $primary_dark;
+          a {
+            span {
+              color: white;
+            }
+          }
+        }
+      }
+    }
+  }
+  .account-main {
+    .orders {
+      table {
+        tr {
+          td {
+            vertical-align: middle;
+          }
+        }
+      }
+    }
+  }
+}
+.order-details {
+  & > div {
+    padding: 1rem;
+    @include container();
+    .product-details {
+      @include container($padding: 0);
+      min-height: 400px;
+      .product {
+        padding: 1rem;
+        border: 1px solid $border;
+        &:first-child {
+          border-radius: $border-radius $border-radius 0 0;
+        }
+        &:last-child {
+          border-radius: 0 0 $border-radius $border-radius;
+        }
+        img {
+          border-radius: $border-radius;
+        }
+      }
+      .order-extra {
+        padding: 1rem;
+        display: grid;
+        @media screen and (min-width: 768px) {
+          grid-template-columns: repeat(2, 1fr);
+        }
+        @media screen and (min-width: 992px) {
+          grid-template-columns: 7fr 5fr;
+        }
+        .breakdown {
+          display: flex;
+          flex-direction: column;
+          gap: 1rem;
+        }
+      }
+    }
+  }
+  .customer-details {
+    @include container();
+    table {
+      width: 100%;
+      th {
+        font-weight: bold;
+      }
+      th,
+      td {
+        padding: 0.5rem 1rem;
+      }
+    }
+  }
+}

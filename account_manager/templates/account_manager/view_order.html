@@ -1,0 +1,118 @@
+{% extends "base.html" %}
+{% load static my_tags %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/my_account.css' %}{% static_timestamp %}">
+{% endblock %}
+
+{% block content %}
+<div class="order-details box box-p htmx-request d-flex flex-column gap-3" id="order-details" x-data="{ order : {} }" hx-swap="none" hx-get="/api/orders/{{ order.ref }}/" hx-trigger="load" hx-indicator="#order-details" @htmx:after-request="$data.order=JSON.parse(event.detail.xhr.response || '{}');">
+    <div>
+
+        {% include "components/htmx_indicator.html" %}
+        <h1 x-text="'Order #' + order.ref"></h1>
+        <div class="d-flex flex-column product-details">
+            <div class="products">
+
+                <template x-for="product in order?.items">
+                    <div class="d-flex gap-3 product">
+                        <img :src="product.product.thumbnail" :alt="product.product.name + 'thumbnail'">
+                        <div class="d-flex justify-content-between gap-3 flex-fill">
+                            <div class="d-flex flex-column justify-content-center">
+                                <p class="h fs-5 mb-2" x-text="product.product.name"></p>
+                                <template x-for="attribute in product.product.attributes_list">
+                                    <div class="d-flex flex-wrap gap-3">
+                                        <span x-text="attribute.value"></span>
+                                    </div>
+                                </template>
+                            </div>
+                            <div class="d-flex flex-column justify-content-center text-end">
+                                <p class="fs-5 mb-2 fw-semibold" x-text="'₹' + product.total"></p>
+                                <span x-text="'Qty: ' + product.quantity"></span>
+                            </div>
+                        </div>
+                    </div>
+                </template>
+            </div>
+            <div class="order-extra">
+                <div class="order-notes">
+
+                </div>
+                <div class="breakdown">
+                    <div class="d-flex flex-wrap gap-3 justify-content-between">
+                        <span class="fw-bold">Subtotal</span>
+                        <span x-text="'₹' + order.subtotal"></span>
+                    </div>
+                    <template x-for="row in order.extra_rows">
+                        <div class="d-flex flex-wrap gap-3 justify-content-between">
+                            <span class="fw-bold" x-text="row.label"></span>
+                            <span x-text="'₹' + row.amount"></span>
+                        </div>
+                    </template>
+                    <div class="d-flex flex-wrap gap-3 justify-content-between border-top pt-3">
+                        <span class="fw-bold">Total</span>
+                        <span x-text="'₹' + order.total"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="customer-details">
+        <div class="d-flex flex-column flex-md-row gap-3">
+            <table>
+                <tbody>
+                    <tr>
+                        <th>Name</th>
+                        <td>{{ order.user.display_name }}</td>
+                    </tr>
+                    <tr>
+                        <th>Email</th>
+                        <td x-text="order.email"></td>
+                    </tr>
+                    <tr>
+                        <th>Billing Address</th>
+                        <td x-text="order.billing_address"></td>
+                    </tr>
+                    <tr>
+                        <th>Shipping Address</th>
+                        <td x-text="order.shipping_address ? order.shipping_address : '-'"></td>
+                    </tr>
+                </tbody>
+            </table>
+            <table>
+                <tbody>
+                    <tr>
+                        <th>Payment Method</th>
+                        <td>
+                            <template x-for="payment in order.payments">
+                                <span x-text="payment.payment_method.toUpperCase()"></span>
+                            </template>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Amount Paid</th>
+                        <td>
+                            <template x-for="payment in order.payments">
+                                <span x-text="'₹' + payment.amount"></span>
+                            </template>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Payment Done</th>
+                        <td>
+                            <template x-for="payment in order.payments">
+                                <span x-text="payment.date_created.toLocaleString()"></span>
+                            </template>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Status</th>
+                        <td><span class="badge rounded-pill" :class="order.is_paid ? 'text-bg-success' : 'text-bg-danger'" x-text="order.is_paid ? 'PAID' : 'UNPAID'"></span></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

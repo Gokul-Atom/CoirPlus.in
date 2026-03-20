@@ -40,3 +40,13 @@ def thumbnail(product_id:int):
     from django.shortcuts import get_object_or_404
     variation = get_object_or_404(ProductVariation, id=product_id)
     return None
+
+
+@register.filter
+def add_class(field, css_class):
+    """Add CSS class to Django form field"""
+    attrs = field.field.widget.attrs
+    classes = attrs.get('class', '').split()
+    classes.append(css_class)
+    attrs['class'] = ' '.join(classes)
+    return field

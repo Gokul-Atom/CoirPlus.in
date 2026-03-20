@@ -1,0 +1,80 @@
+{% extends "account_manager/my_account_base.html" %}
+{% load wagtailcore_tags %}
+
+{% block account_content %}
+<h1>My Orders</h1>
+
+<div class="orders" id="orders" x-data="{
+  orders: {},
+  payment_url: '{% url 'payment_page' token='__TOKEN__' %}',
+  order_url: '{% url 'view_order' order_ref='__ORDER__' %}',
+  async fetchOrders(url) {
+    const res = await fetch(`${url}`);
+    this.orders = await res.json();
+  }
+}" x-init="fetchOrders(`/api/orders/`)">
+    <template x-if="orders?.results?.length">
+        <table class="table">
+            <thead>
+                <tr>
+                    <td>Order No</td>
+                    <td>Order Total</td>
+                    <td>Paid</td>
+                    <td>Status</td>
+                    <td>Quick Links</td>
+                </tr>
+            </thead>
+            <tbody>
+                <template x-for="order in orders.results">
+                    <tr>
+                        <td x-text="order.ref"></td>
+                        <td x-text="'₹' + order.total"></td>
+                        <td>
+                            <span class="fs-4 bi" :class="order.is_paid ? 'bi-check-circle-fill text-success' : 'bi-x-circle-fill text-danger';"></span>
+                        </td>
+                        <td x-text="order.status"></td>
+                        <td>
+                            <div class="d-flex flex-wrap gap-4">
+                                <template x-if="!order?.is_paid">
+                                    <a :href="payment_url.replace('__TOKEN__', order.token)">Pay Now</a>
+                                </template>
+                                <a :href="order_url.replace('__ORDER__', order.ref)">View Order</a>
+                            </div>
+                        </td>
+                    </tr>
+                </template>
+            </tbody>
+        </table>
+    </template>
+    <div class="pagination">
+        <nav aria-label="Order navigation">
+            <ul class="pagination">
+                <template x-if="orders.previous">
+                    <li class="page-item">
+                        <button class="page-link" aria-label="Previous" @click="fetchOrders(`${orders?.previous}`)">
+                            <span aria-hidden="true">&laquo;</span>
+                        </button>
+                    </li>
+                </template>
+                <template x-if="orders.next">
+                    <li>
+                        <button class="page-link" aria-label="Next" @click="fetchOrders(`${orders?.next}`)">
+                            <span aria-hidden="true">&raquo;</span>
+                        </button>
+                    </li>
+                </template>
+            </ul>
+        </nav>
+    </div>
+    <template x-if="!orders?.results?.length">
+        <div class="text-center">
+            <p class="fs-5">
+                No orders placed!
+            </p>
+            <a href="{% pageurl shop_page %}" class="btn btn-primary fw-bold">
+                Shop Now
+            </a>
+        </div>
+    </template>
+</div>
+{% endblock %}

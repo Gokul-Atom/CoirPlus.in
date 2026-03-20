@@ -10,6 +10,9 @@
 {% block content %}
 <div class="checkout py-3">
     <h1 class="page-title">Checkout</h1>
+    {% if not request.user.basket.items.all %}
+    {% include "components/empty_basket_cart.html" with type="cart" %}
+    {% else %}
     <form action="" method="post" hx-post="" novalidate hx-target="#checkout">
         <div class="d-grid">
             <div class="checkout" id="checkout">
@@ -72,5 +75,6 @@
             </div>
         </div>
     </form>
+    {% endif %}
 </div>
 {% endblock %}

@@ -1,0 +1,19 @@
+{% extends "account_manager/my_account_base.html" %}
+
+{% block account_content %}
+<div>
+    <p class="fs-6">
+        Hello <strong>{{ request.user.display_name }}</strong> (not <strong>{{ request.user.display_name }}</strong>?
+        <a href="{% url 'account_logout' %}">Logout</a>)
+    </p>
+    <p>
+        From your account dashboard you can view your
+        <a href="{% url 'my_orders' %}" class="fw-bold">recent orders</a>
+        , manage your
+        <a href="{% url 'my_addresses' %}" class="fw-bold">shopping and billing Addresses</a>
+        , and
+        <a href="{% url 'my_account_details' %}" class="fw-bold">edit your password and account details</a>
+        .
+    </p>
+</div>
+{% endblock %}

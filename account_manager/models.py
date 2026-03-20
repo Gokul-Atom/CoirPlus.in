@@ -4,26 +4,31 @@ from django.core.validators import RegexValidator
 from django.utils.translation import gettext_lazy as _
 from django_countries.fields import CountryField
 from django.utils import timezone
+from django.contrib.auth.decorators import login_required
+from django.contrib.sessions.models import Session
+from django.utils.decorators import method_decorator
 
 from common.mixins import PageBase, SEOExtraMixin, TimestampMixin
 
 
 # Pages
+@method_decorator(login_required, name="serve")
 class MyAccountPage(PageBase):
     pass
 
 
+@method_decorator(login_required, name="serve")
 class WishlistPage(PageBase):
     pass
 
 
+@method_decorator(login_required, name="serve")
 class CartPage(PageBase):
     pass
 
 
 # Create your models here.
 class User(AbstractUser):
-    pass
     # phone_regex = RegexValidator(
     #     regex=r"^\+?1?\d{9,15}$",
     #     message=_("Phone number must be entered in the format: '+919XXXXXXXXX'. Up to 15 digits allowed")
@@ -52,12 +57,12 @@ class User(AbstractUser):
     #     verbose_name=_("Default delivery address"),
     #     related_name="+",
     # )
-    # @property
-    # def display_name(self):
-    #     return self.first_name if self.first_name else self.username
+    @property
+    def display_name(self):
+        return self.get_full_name() or self.username
     
-    # def __str__(self):
-    #     return self.get_full_name() or self.username
+    def __str__(self):
+        return self.display_name
 
 
 class CheckoutAddress(models.Model):
@@ -133,19 +138,19 @@ class CheckoutAddress(models.Model):
         return f"{self.full_name} - {self.city}"
 
 
-# class RecentlyViewed(TimestampMixin, models.Model):
-#     pass
-    # user = models.ForeignKey("account_manager.User", on_delete=models.CASCADE, related_name="recently_viewed_items")
-    # product = models.ForeignKey("store_manager.Product", on_delete=models.CASCADE, related_name="recently_viewed_by_users")
+class RecentlyViewed(TimestampMixin, models.Model):
+    user = models.ForeignKey("account_manager.User", on_delete=models.CASCADE, blank=True, null=True, related_name="recently_viewed_items")
+    product = models.ForeignKey("store_manager.Product", on_delete=models.CASCADE, related_name="recently_viewed_by_users")
+    session = models.ForeignKey(Session, on_delete=models.CASCADE, blank=True, null=True)
 
-    # class Meta:
-    #     constraints = [
-    #         models.UniqueConstraint(fields=["user", "product"], name="unique_recently_viewed")
-    #     ]
-    #     ordering = ("-updated_at",)
+    class Meta:
+        # constraints = [
+        #     models.UniqueConstraint(fields=["user", "product"], name="unique_recently_viewed")
+        # ]
+        ordering = ("-date_updated",)
 
-    # def __str__(self):
-    #     return f"{self.user.display_name} viewed {self.product} at {self.updated_at}"
+    def __str__(self):
+        return f"{self.user.display_name or self.session.session_key} viewed {self.product} at {self.date_updated}"
 
 
 # class Invoice(models.Model):

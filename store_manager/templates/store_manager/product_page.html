@@ -15,7 +15,13 @@
         <div class="p-3 pb-0 product-gallery">
             {% include "components/product_gallery.html" %}
         </div>
-        <div class="p-3 pb-0 product-detail">
+        <div class="p-3 pb-0 product-detail" x-data='{
+            product: {{product.product_details|safe}},
+            selected_variation: {{variation.id}},
+            get active_variation() {
+                return this.product.variations.find(v=>v.id==this.selected_variation)
+            }
+        }'>
             {% if product.product_categories %}
             <div class="categories">
                 <small>
@@ -30,7 +36,15 @@
             {% endif %}
             <h1>{{ product.title }}</h1>
             <div class="price">
-                {% include "components/product_variation_price.html" %}
+                <template x-if="!active_variation?.sale_price">
+                    <span class="base-price amt" x-text="active_variation.base_price"></span>
+                </template>
+                <template x-if="active_variation?.sale_price">
+                    <div>
+                        <span class="sale-price amt" x-text="active_variation.sale_price"></span>
+                        <span class="base-price amt" x-text="active_variation.base_price"></span>
+                    </div>
+                </template>
             </div>
             <div>
                 <hr>
@@ -39,28 +53,25 @@
             <div class="variations">
                 <hr>
                 <form action="" method="post">
-                    {% with attributes=product.product_attributes.attributes keys=product.product_attributes.keys %}
-                    {% for key in keys %}
-                    <div id="{{ key }}" x-data="{ selected: '' }">
-                        <div class="fs-5 h fw-semibold">{{ key }}<span class="fs-6" x-text="selected ? ': ' + selected : ''"></span> </div>
-                        <div class="items">
-                            {% for attribute in attributes|get_item:key %}
-                            <input type="radio" name="{{ key }}" id="{{ key }}-{{ forloop.counter }}" value="{{ attribute.slug }}" @click="selected='{{ attribute.value }}'">
-                            <label for="{{ key }}-{{ forloop.counter }}">{{ attribute.value }}</label>
-                            {% endfor %}
-                        </div>
+                    <div class="fs-5 h fw-semibold">Size<span class="fs-6" x-text="selected_variation ? ': ' + active_variation.attributes[0].value : ''"></span> </div>
+                    <div class="items d-flex flex-wrap gap-2">
+                        <template x-for="variation in product.variations">
+                            <div>
+                                <input type="radio" name="variation" :id="'v-' + variation.id" :value="variation.id" x-model="selected_variation">
+                                <label :for="'v-' + variation.id" x-text="variation.attributes[0].value"></label>
+                            </div>
+                        </template>
                     </div>
-                    {% endfor %}
-                    {% endwith %}
                 </form>
             </div>
             <div class="buy">
                 <hr>
                 <div class="fs-5 h fw-semibold">Quantity</div>
-                <form action="/api/basket/" hx-post="/api/basket/" hx-swap="none" method="post" x-data="{ qty: 1, buttonText: 'Add to Cart' }" class="d-flex gap-3" id="basket-form" @htmx:after-request="$data.buttonText='Added'">
+                {% if request.user and request.user.is_authenticated %}
+                <form action="/api/basket/" hx-post="/api/basket/" hx-swap="none" method="post" x-data="{ qty: 1, buttonText: 'Add to Cart' }" class="d-flex gap-3" id="basket-form" @htmx:after-request="$data.buttonText='Added'; document.querySelector('*[data-bs-target=\'#cart-offcanvas\']').click();">
                     {% csrf_token %}
                     <input type="hidden" name="product_type" value="store_manager.ProductVariation">
-                    <input type="hidden" name="product_id" value="{{variation.id}}">
+                    <input type="hidden" name="product_id" :value="selected_variation">
                     <div class="qty">
                         <button class="btn btn-sub" type="button" @click="qty - 1 < 1 ? qty : qty--"><span class="bi bi-dash-lg"></span></button>
                         <input type="number" name="quantity" id="quantity" x-model.number="qty" min="1" max="10" @input="if (qty < 1) qty = 1; if (qty > 10) qty = 10;">
@@ -68,10 +79,13 @@
                     </div>
                     <button type="submit" class="btn btn-primary"><span class="bi bi-cart-plus text-white fs-5"></span> <span class="text-white fw-bold" x-text="buttonText"></span></button>
                 </form>
+                {% else %}
+                <p class="fs-6 mt-3">Please <a href="{% url 'account_login' %}?next={{ request.path }}">login</a> to add to cart</p>
+                {% endif %}
             </div>
             <hr>
             {% if variation.sku %}
-            <span class="sku"><strong>SKU:</strong> {{ variation.sku }}</span>
+            <span class="sku"><strong>SKU:</strong> <span x-text="active_variation.sku"></span></span>
             {% endif %}
         </div>
     </div>
@@ -80,19 +94,13 @@
     <div class="all-info">
         {% include "components/full_info.html" %}
     </div>
+    <hr>
     <div class="recently-viewed">
         <h3>Recently Viewed</h3>
         <div class="products">
-            {% include "components/product_card.html" %}
-            {% include "components/product_card.html" %}
-            {% include "components/product_card.html" %}
-            {% include "components/product_card.html" %}
-            {% include "components/product_card.html" %}
-            {% include "components/product_card.html" %}
-            {% include "components/product_card.html" %}
-            {% include "components/product_card.html" %}
-            {% include "components/product_card.html" %}
-            {% include "components/product_card.html" %}
+            {% for product in recently_viewed %}
+            {% include "components/product_card.html" with product=product.product %}
+            {% endfor %}
         </div>
     </div>
 </div>

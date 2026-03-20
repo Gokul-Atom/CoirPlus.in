@@ -1,0 +1,107 @@
+.my-account {
+  display: grid;
+  gap: 2rem;
+  padding: 1rem 0;
+}
+@media screen and (min-width: 992px) {
+  .my-account {
+    grid-template-columns: 400px auto;
+  }
+}
+.my-account .account-menu {
+  border-radius: 1rem;
+  border: 1px solid #769840;
+  max-width: 400px;
+}
+.my-account .account-menu ul {
+  padding: 0.5rem 0;
+}
+.my-account .account-menu ul .nav-link a {
+  display: flex;
+  gap: 1.5rem;
+  padding: 0.75rem 1rem;
+  width: 100%;
+  align-items: center;
+}
+.my-account .account-menu ul .nav-link a span {
+  font-size: 1.15rem;
+}
+.my-account .account-menu ul .nav-link a span.bi {
+  font-size: 1.5rem;
+}
+.my-account .account-menu ul .nav-link.active {
+  background: #769840;
+}
+.my-account .account-menu ul .nav-link.active a span {
+  color: white;
+  font-weight: bold;
+}
+.my-account .account-menu ul .nav-link:hover {
+  background: #597231;
+}
+.my-account .account-menu ul .nav-link:hover a span {
+  color: white;
+}
+.my-account .account-main .orders table tr td {
+  vertical-align: middle;
+}
+
+.order-details > div {
+  padding: 1rem;
+  box-shadow: 0 0 6px #E6E6E6;
+  padding: 1rem;
+  border-radius: 1rem;
+}
+.order-details > div .product-details {
+  box-shadow: 0 0 6px #E6E6E6;
+  padding: 0;
+  border-radius: 1rem;
+  min-height: 400px;
+}
+.order-details > div .product-details .product {
+  padding: 1rem;
+  border: 1px solid #E6E6E6;
+}
+.order-details > div .product-details .product:first-child {
+  border-radius: 1rem 1rem 0 0;
+}
+.order-details > div .product-details .product:last-child {
+  border-radius: 0 0 1rem 1rem;
+}
+.order-details > div .product-details .product img {
+  border-radius: 1rem;
+}
+.order-details > div .product-details .order-extra {
+  padding: 1rem;
+  display: grid;
+}
+@media screen and (min-width: 768px) {
+  .order-details > div .product-details .order-extra {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+@media screen and (min-width: 992px) {
+  .order-details > div .product-details .order-extra {
+    grid-template-columns: 7fr 5fr;
+  }
+}
+.order-details > div .product-details .order-extra .breakdown {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+.order-details .customer-details {
+  box-shadow: 0 0 6px #E6E6E6;
+  padding: 1rem;
+  border-radius: 1rem;
+}
+.order-details .customer-details table {
+  width: 100%;
+}
+.order-details .customer-details table th {
+  font-weight: bold;
+}
+.order-details .customer-details table th,
+.order-details .customer-details table td {
+  padding: 0.5rem 1rem;
+}/*# sourceMappingURL=my_account.css.map */

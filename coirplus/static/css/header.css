@@ -20,30 +20,32 @@ header nav .brand-logo {
   header nav .brand-logo {
     max-width: 100%;
     width: 100px;
+    height: auto;
     -o-object-fit: contain;
        object-fit: contain;
   }
 }
-header nav .search-form {
+
+.search-form {
   border-radius: 50rem;
   border: 2px solid #769840;
   padding: 4px;
 }
-header nav .search-form input {
-  padding: 0.5rem 1rem;
+.search-form input {
+  padding: 0.5rem 3rem 0.5rem 1rem;
   border: none;
   box-shadow: none !important;
 }
-header nav .search-form div {
+.search-form div {
   top: 50%;
   right: 4px;
   transform: translateY(-50%);
 }
-header nav .search-form div button {
+.search-form div button {
   border-radius: 50rem !important;
   aspect-ratio: 1;
 }
-header nav .search-form div button .bi {
+.search-form div button .bi {
   color: white;
 }
 

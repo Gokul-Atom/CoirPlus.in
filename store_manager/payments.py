@@ -7,6 +7,44 @@ from django.http import HttpResponse
 
 Order = get_salesman_model("Order")
 
+class RazorpayAPI:
+    def __init__(self):
+        self.test_api_key = None
+        self.test_api_secret = None
+        self.live_api_key = None
+        self.live_api_secret = None
+        self.client = None
+
+    def authorize_client(self):
+        site_settings = SiteSettings.load()
+        if site_settings.enable_razorpay:
+            if site_settings.enable_live_mode:
+                self.client = razorpay.Client(auth=(self.live_api_key, self.live_api_secret))
+            else:
+                self.client = razorpay.Client(auth=(self.test_api_key, self.test_api_secret))
+
+    def create_order(self, amount, order):
+        if self.client is None:
+            self.authorize_client()
+        return self.client.order.create({
+            "amount": amount,
+            "currency": "INR",
+            "payment_capture": "1",
+            "receipt": order.ref,
+        })
+    
+    def verify_payment_signature(self, params_dict):
+        try:
+            # try:
+            self.client.utility.verify_payment_signature(params_dict)
+            # except AttributeError:
+            #     return False
+            return True
+        except razorpay.errors.SignatureVerificationError as e:
+            return False
+
+razorpay_api = RazorpayAPI()
+
 
 class Razorpay(PaymentMethod):
     """
@@ -62,12 +100,7 @@ class Razorpay(PaymentMethod):
         basket.update(request)
         amount = int(basket.total * 100)
         order = Order.objects.create_from_basket(basket, request, status="HOLD")
-        razorpay_order = self.client.order.create({
-            "amount": amount,
-            "currency": "INR",
-            "payment_capture": "1",
-            "receipt": order.ref,
-        })
+        razorpay_order = razorpay_api.create_order(amount, order)
         order.razorpay_order_id = razorpay_order["id"]
         email = kwargs.get("email")
         billing_address = kwargs.get("billing_address")
@@ -79,7 +112,7 @@ class Razorpay(PaymentMethod):
         if shipping_address:
             order.shipping_address = shipping_address.plain_address() if shipping_address else billing_address.plain_address()
         order.save(update_fields=["email", "billing_address", "shipping_address", "razorpay_order_id"])
-        # basket.items.all().delete()
+        basket.items.all().delete()
         return order
         # url = reverse("salesman-order-last") + f"?token={order.token}"
         if request.headers.get("HX-Request"):
@@ -88,12 +121,3 @@ class Razorpay(PaymentMethod):
             return response
         return f"https://api.razorpay.com/v1/checkout/public?order_id=order_SSfqUQcp6XFhWF"
         # return request.build_absolute_uri(url)
-    
-    def verify_payment_signature(self, params_dict):
-        try:
-            self.client.utility.verify_payment_signature(params_dict)
-            return True
-        except razorpay.errors.SignatureVerificationError as e:
-       # Payment signature verification failed
-       # Handle the error accordingly
-            return False

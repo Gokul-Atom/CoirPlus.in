@@ -1,0 +1,36 @@
+{% load my_filters %}
+
+{% with debug=False show_type=False %}
+{% if debug %}
+{# original form from allauth #}
+{{ attrs.form.as_p }}
+{% endif %}
+
+<div class="d-flex flex-column gap-3 fields">
+    {{ form.non_field_errors }}
+    {% for field in form %}
+    {% if show_type %}
+    <pre>{{ field|widget_type }}</pre>
+    {% endif %}
+
+    {% if field|widget_type == "checkboxinput" %}
+    <div class="form-check">
+        {{ field|add_class:"form-check-input" }}
+        {{ field.label_tag|cut:":" }}
+        <div class="mt-2">
+            {{ field.help_text }}
+        </div>
+    </div>
+    {% else %}
+    <div>
+        {{ field.label_tag|cut:":" }}
+        {{ field|add_class:"form-control" }}
+        <div class="mt-2">
+            {{ field.help_text }}
+        </div>
+    </div>
+    {% endif %}
+    {% endfor %}
+</div>
+
+{% endwith %}

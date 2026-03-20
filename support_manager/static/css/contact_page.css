@@ -1,0 +1,47 @@
+.contact-page .google-maps iframe {
+  width: 100% !important;
+  min-height: 500px;
+}
+.contact-page .contact {
+  padding: 1rem;
+  display: grid;
+  gap: 2rem;
+}
+@media screen and (min-width: 768px) {
+  .contact-page .contact {
+    grid-template-columns: repeat(2, 1fr);
+    align-items: end;
+    margin-top: -26rem;
+  }
+}
+@media screen and (min-width: 992px) {
+  .contact-page .contact {
+    grid-template-columns: 5fr 7fr;
+    margin-top: -28rem;
+  }
+}
+.contact-page .contact:has(.submitted) {
+  margin-top: 0;
+}
+.contact-page .contact .contact-form {
+  background: white;
+  box-shadow: 0 0 6px #E6E6E6;
+  padding: 1rem;
+  border-radius: 1rem;
+  padding: 2rem;
+}
+.contact-page .contact .contact-form form label {
+  font-weight: bold;
+}
+.contact-page .contact .contact-form form input,
+.contact-page .contact .contact-form form textarea {
+  padding: 0.5rem 1rem;
+}
+.contact-page .contact .info > div {
+  display: grid;
+}
+@media screen and (min-width: 992px) {
+  .contact-page .contact .info > div {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}/*# sourceMappingURL=contact_page.css.map */

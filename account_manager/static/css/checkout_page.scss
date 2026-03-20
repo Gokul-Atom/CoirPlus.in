@@ -1,49 +1,52 @@
 @import "../../../coirplus/static/css/variables";
 
 .checkout-page {
-  form {
-    padding: 1rem;
-    .d-grid {
-      gap: 4rem;
-      @media screen and (min-width: 992px) {
-        grid-template-columns: 7fr 5fr;
-      }
-      .checkout {
-        .shipping {
-          transform: translateX(-50%);
-          opacity: 0;
-          height: 0;
-          overflow: hidden;
-          transition: all ease 300ms;
-          &.show {
-            opacity: 1;
-            transform: translateX(0);
-            height: 100%;
-          }
+  .checkout {
+    form {
+      padding: 1rem;
+      .d-grid {
+        gap: 4rem;
+        @media screen and (min-width: 992px) {
+          grid-template-columns: 7fr 5fr;
         }
-        .shipping,
-        .billing {
-          label {
-            font-weight: 700;
+        .checkout {
+          .shipping {
+            transform: translateX(-50%);
+            opacity: 0;
+            height: 0;
+            overflow: hidden;
+            transition: all ease 300ms;
+            &.show {
+              opacity: 1;
+              transform: translateX(0);
+              height: 100%;
+            }
           }
-          input, select {
-            @media screen and (min-width: 768px) {
-              padding: 1rem;
+          .shipping,
+          .billing {
+            label {
+              font-weight: 700;
+            }
+            input,
+            select {
+              @media screen and (min-width: 768px) {
+                padding: 1rem;
+              }
             }
           }
         }
-      }
-      .order-detail {
-        & > div {
-          padding: 1rem;
-          border-radius: $border-radius;
-          box-shadow: 0 4px 8px $border;
-          @media screen and (min-width: 992px) {
-            padding: 2rem;
-          }
-          table {
-            td {
-              padding: 0.5rem 0.25rem;
+        .order-detail {
+          & > div {
+            padding: 1rem;
+            border-radius: $border-radius;
+            box-shadow: 0 4px 8px $border;
+            @media screen and (min-width: 992px) {
+              padding: 2rem;
+            }
+            table {
+              td {
+                padding: 0.5rem 0.25rem;
+              }
             }
           }
         }

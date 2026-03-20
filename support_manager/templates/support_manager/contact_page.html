@@ -1,4 +1,84 @@
 {% extends "base.html" %}
+{% load wagtailcore_tags my_filters my_tags static %}
+
+{% block body_class %}contact-page{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/contact_page.css' %}{% static_timestamp %}">
+<link rel="stylesheet" href="{% static 'css/product_card.css' %}{% static_timestamp %}">
+{% endblock %}
 
 {% block content %}
+{% with common_settings=settings.common.SiteSettings %}
+<div>
+    <h1 class="d-none">Contact Us</h1>
+    <div class="google-maps">
+        {{ common_settings.google_maps_iframe|safe }}
+    </div>
+    <div class="contact box">
+        <div class="contact-form">
+            <h2>
+                Get A Quote
+            </h2>
+            <span>
+                Fill up the form and our Team will get back to you within 24 hours.
+            </span>
+            {% include "components/contact_form.html" %}
+        </div>
+        <div class="info">
+            <h2>
+                Contact Information
+            </h2>
+            <div class="gap-4">
+                <div class="d-flex flex-column gap-2">
+                    <div class="d-flex gap-3 align-items-start">
+                        <a href="tel:{{ number|cut:' ' }}" class="nav-link fs-5 d-flex" target="_blank" rel="noreferrer noopener">
+                            <span class="bi bi-geo-alt fs-5 me-3"></span>
+                            <span>
+                                {{ common_settings.address }}
+                            </span>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="d-flex flex-column gap-2">
+                    {% for number in common_settings.contact_numbers|splitlines %}
+                    <div class="d-flex gap-3 align-items-start">
+                        <a href="tel:{{ number|cut:' ' }}" class="nav-link fs-5 d-flex" target="_blank" rel="noreferrer noopener">
+                            <span class="bi fs-5 bi-phone me-3"></span>
+                            <span>
+                                {{ number }}
+                            </span>
+                        </a>
+                    </div>
+                    {% endfor %}
+                </div>
+
+                <div class="d-flex flex-column gap-2">
+                    {% for email in common_settings.contact_emails|splitlines %}
+                    <div class="d-flex gap-2 align-items-start">
+                        <a href="mailto:{{ email }}" class="nav-link fs-5 d-flex" target="_blank" rel="noreferrer noopener">
+                            <span class="bi fs-5 bi-envelope me-3"></span>
+                            <span>
+                                {{ email }}
+                            </span>
+                        </a>
+                        </li>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<hr>
+<div class="recently-viewed">
+    <h2 class="section-title">Recently Viewed</h2>
+    <div class="products">
+        {% for product in recently_viewed %}
+        {% include "components/product_card.html" with product=product.product %}
+        {% endfor %}
+    </div>
+</div>
+{% endwith %}
 {% endblock %}

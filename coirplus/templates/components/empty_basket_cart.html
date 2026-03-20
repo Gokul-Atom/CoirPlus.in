@@ -1,0 +1,12 @@
+{% load wagtailcore_tags %}
+
+{% with common_settings=settings.common.SiteSettings %}
+<div class="d-flex flex-column align-items-center text-center">
+    <p class="fs-5">
+        Your {{ type|default:"basket" }} is empty!
+    </p>
+    <a class="btn btn-primary fs-4" href="{% pageurl common_settings.shop_page %}">
+        Shop Now
+    </a>
+</div>
+{% endwith %}

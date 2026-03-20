@@ -26,8 +26,8 @@
                 <span class="visually-hidden">CoirPlus</span>
             </a>
             <div class="d-lg-none">
-                <button class="btn position-relative" type="button" data-bs-toggle="offcanvas" data-bs-target="#cart-offcanvas" aria-controls="cart-offcanvas">
-                    <span class="bi bi-bag fs-3"></span>
+                <button class="btn position-relative" type="button" data-bs-toggle="offcanvas" data-bs-target="#cart-offcanvas" hx-on:click="htmx.trigger('#cart-offcanvas #cart-data', 'refreshCart');" aria-controls="cart-offcanvas">
+                    <span class="bi bi-bag-fill fs-3"></span>
                     <span class="visually-hidden">Cart</span>
                     <small class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
                         <span class="text-white fw-semibold" x-text="count"></span>
@@ -40,6 +40,11 @@
                     <span class="bi bi-search fs-3"></span>
                     <span class="visually-hidden">Search</span>
                 </button>
+
+                <a href="{% pageurl common_settings.account_page %}" class="btn">
+                    <span class="bi bi-person-fill fs-3"></span>
+                    <span class="visually-hidden">My Account</span>
+                </a>
 
                 <button class="btn" type="button" data-bs-toggle="offcanvas" data-bs-target="#menu-offcanvas" aria-controls="menu-offcanvas">
                     <span class="bi bi-list fs-3"></span>
@@ -78,15 +83,15 @@
                     <span class="vr"></span>
                 </div>
                 <div class="d-flex gap-3">
-                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0 gap-4">
                         {% flat_menu "main_menu" template="menus/header_menu.html" %}
                     </ul>
                 </div>
             </div>
 
             <div class="d-flex align-items-center gap-2">
-                <button class="btn position-relative" type="button" data-bs-toggle="offcanvas" data-bs-target="#cart-offcanvas" aria-controls="cart-offcanvas">
-                    <span class="bi bi-bag fs-3"></span>
+                <button class="btn position-relative" type="button" data-bs-toggle="offcanvas" data-bs-target="#cart-offcanvas" hx-on:click="htmx.trigger('#cart-offcanvas #cart-data', 'refreshCart')" aria-controls="cart-offcanvas">
+                    <span class="bi bi-bag-fill fs-3"></span>
                     <span class="visually-hidden">Cart</span>
                     <small class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
                         <span class="text-white fw-semibold" x-text="count"></span>
@@ -94,10 +99,9 @@
                     </small>
                 </button>
 
-                <!-- Button trigger modal -->
-                <a href="#" class="btn">
-                    <span class="bi bi-person fs-3"></span>
-                    <span class="visually-hidden">Search</span>
+                <a href="{% pageurl common_settings.account_page %}" class="btn">
+                    <span class="bi bi-person-fill fs-3"></span>
+                    <span class="visually-hidden">My Account</span>
                 </a>
             </div>
 
@@ -111,8 +115,9 @@
         <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
     </div>
     <div class="offcanvas-body">
-        <div class="d-flex flex-column justify-content-between" x-data="{basket: {}}" hx-get="/api/basket/" hx-swap="none" hx-trigger="load" @htmx:after-request="$data.basket = JSON.parse(event.detail.xhr.response || '{}')">
-            <div class="d-flex flex-column basket">
+        <div class="d-flex flex-column justify-content-between" id="cart-data" x-data="{basket: {}}" hx-get="/api/basket/" hx-swap="none" hx-indicator="#basket" hx-trigger="refreshCart from:body" @htmx:after-request="$data.basket = JSON.parse(event.detail.xhr.response || '{}')">
+            <div class="d-flex flex-column basket" id="basket">
+                {% include "components/htmx_indicator.html" %}
                 <template x-for="(item, index) in basket.items" :key="item.ref">
                     <div class="d-flex flex-column">
                         <div class="d-flex align-items-center justify-content-between gap-3">
@@ -132,19 +137,23 @@
                     </div>
                 </template>
                 <template x-if="!basket?.items?.length">
-                    <div>Empty basket</div>
+                    <div class="h-100">
+                        {% include "components/empty_basket_cart.html" with type="basket" %}
+                    </div>
                 </template>
             </div>
-            <div class="subtotal">
-                <div class="d-flex justify-content-between gap-3 flex-wrap">
-                    <span x-text="'Subtotal:'" class="fs-5 fw-semibold" x-show="basket.subtotal"></span>
-                    <span x-text="basket.subtotal" class="amt fs-4 fw-semibold" x-show="basket.subtotal"></span>
+            <template x-if="basket?.items?.length">
+                <div class="subtotal">
+                    <div class="d-flex justify-content-between gap-3 flex-wrap">
+                        <span x-text="'Subtotal:'" class="fs-5 fw-semibold" x-show="basket.subtotal"></span>
+                        <span x-text="basket.subtotal" class="amt fs-4 fw-semibold" x-show="basket.subtotal"></span>
+                    </div>
+                    <div class="d-flex gap-3">
+                        <a class="btn btn-primary w-100" href="{% pageurl common_settings.cart_page %}">View Cart</a>
+                        <a class="btn btn-primary w-100" href="{% pageurl common_settings.checkout_page %}">Checkout</a>
+                    </div>
                 </div>
-                <div class="d-flex gap-3">
-                    <a class="btn btn-primary w-100" href="{% pageurl common_settings.cart_page %}">View Cart</a>
-                    <a class="btn btn-primary w-100" href="{% pageurl common_settings.checkout_page %}">Checkout</a>
-                </div>
-            </div>
+            </template>
         </div>
     </div>
 </div>
@@ -194,20 +203,21 @@
     </div>
 </div>
 
-<!-- Modal -->
+<!-- Search Modal -->
 <div class="modal fade" id="search-modal" tabindex="-1" aria-labelledby="search-modalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h1 class="modal-title fs-5" id="search-modalLabel">Modal title</h1>
+                <h1 class="modal-title fs-5" id="search-modalLabel">Search Products</h1>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                ...
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary">Save changes</button>
+                <form class="d-flex position-relative w-100 search-form nav-search-form" role="search" action="{% pageurl common_settings.shop_page %}">
+                    <input class="form-control rounded-pill" type="search" name="q" placeholder="Search" value="{{ request.GET.q }}" aria-label="Search" />
+                    <div class="position-absolute">
+                        <button class="btn btn-primary rounded-pill" type="submit"><span class="bi bi-search"></span><span class="visually-hidden">Search</span></button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>

@@ -1,47 +1,48 @@
-.checkout-page form {
+.checkout-page .checkout form {
   padding: 1rem;
 }
-.checkout-page form .d-grid {
+.checkout-page .checkout form .d-grid {
   gap: 4rem;
 }
 @media screen and (min-width: 992px) {
-  .checkout-page form .d-grid {
+  .checkout-page .checkout form .d-grid {
     grid-template-columns: 7fr 5fr;
   }
 }
-.checkout-page form .d-grid .checkout .shipping {
+.checkout-page .checkout form .d-grid .checkout .shipping {
   transform: translateX(-50%);
   opacity: 0;
   height: 0;
   overflow: hidden;
   transition: all ease 300ms;
 }
-.checkout-page form .d-grid .checkout .shipping.show {
+.checkout-page .checkout form .d-grid .checkout .shipping.show {
   opacity: 1;
   transform: translateX(0);
   height: 100%;
 }
-.checkout-page form .d-grid .checkout .shipping label,
-.checkout-page form .d-grid .checkout .billing label {
+.checkout-page .checkout form .d-grid .checkout .shipping label,
+.checkout-page .checkout form .d-grid .checkout .billing label {
   font-weight: 700;
 }
 @media screen and (min-width: 768px) {
-  .checkout-page form .d-grid .checkout .shipping input, .checkout-page form .d-grid .checkout .shipping select,
-  .checkout-page form .d-grid .checkout .billing input,
-  .checkout-page form .d-grid .checkout .billing select {
+  .checkout-page .checkout form .d-grid .checkout .shipping input,
+  .checkout-page .checkout form .d-grid .checkout .shipping select,
+  .checkout-page .checkout form .d-grid .checkout .billing input,
+  .checkout-page .checkout form .d-grid .checkout .billing select {
     padding: 1rem;
   }
 }
-.checkout-page form .d-grid .order-detail > div {
+.checkout-page .checkout form .d-grid .order-detail > div {
   padding: 1rem;
   border-radius: 1rem;
   box-shadow: 0 4px 8px #E6E6E6;
 }
 @media screen and (min-width: 992px) {
-  .checkout-page form .d-grid .order-detail > div {
+  .checkout-page .checkout form .d-grid .order-detail > div {
     padding: 2rem;
   }
 }
-.checkout-page form .d-grid .order-detail > div table td {
+.checkout-page .checkout form .d-grid .order-detail > div table td {
   padding: 0.5rem 0.25rem;
 }/*# sourceMappingURL=checkout_page.css.map */

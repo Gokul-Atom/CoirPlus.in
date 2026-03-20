@@ -1,0 +1,14 @@
+@import "../../../coirplus/static/css/variables";
+
+main {
+  #content {
+    padding: 1rem;
+    border-radius: $border-radius;
+    box-shadow: 0 0 6px $border;
+    form {
+      button[name="action_remove"] {
+        background: var(--bs-danger);
+      }
+    }
+  }
+}

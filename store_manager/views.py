@@ -2,10 +2,14 @@ from django.shortcuts import render
 from django.template.response import TemplateResponse
 from django.shortcuts import get_object_or_404
 from rest_framework.decorators import api_view
+from rest_framework.response import Response
 from django.http.response import HttpResponse
+from django.contrib.auth.decorators import login_required
 
 from .models import ProductVariation, Product, Review
 from .forms import ReviewForm
+from account_manager.models import RecentlyViewed
+import json
 
 # from faker import Faker
 # faker = Faker()
@@ -26,9 +30,30 @@ from .forms import ReviewForm
 # reviews = generate_reviews(n=20)
 
 
+def update_recently_viewed(request, product_id):
+    product = get_object_or_404(Product, id=product_id)
+
+    if request.user.is_authenticated:
+        RecentlyViewed.objects.update_or_create(
+            user=request.user,
+            product=product
+        )
+        return RecentlyViewed.objects.filter(user=request.user).all()
+    else:
+        # Ensure session exists
+        if not request.session.session_key:
+            request.session.create()
+        RecentlyViewed.objects.update_or_create(
+            session_id=request.session.session_key,
+            product=product
+        )
+        return RecentlyViewed.objects.filter(session_id=request.session.session_key).all()
+
+
 # Create your views here.
 def product_page(request, slug):
     product = get_object_or_404(Product, slug=slug)
+    recently_viewed = update_recently_viewed(request, product.id)
     variation_id = request.GET.get("vid")
     if variation_id is None:
         first_variation = product.product_variations.first()
@@ -39,11 +64,29 @@ def product_page(request, slug):
         "variation": variation,
         "review_form": ReviewForm(),
         "product_reviews": product.reviews.all(),
+        "recently_viewed": recently_viewed[:6],
     }
     return TemplateResponse(request, "store_manager/product_page.html", context=context)
 
 
 # APIs
+@api_view(["GET"])
+def product_suggestions(request):
+    query = request.GET.get("q")
+    products = Product.objects.none()
+    if query:
+        products = Product.objects.filter(title__icontains=query)[:10]
+    products_list = []
+    for product in products:
+        products_list.append({
+            "name": product.title,
+            "slug": product.slug,
+            "price_range": product.price_range,
+            "thumbnail": product.thumbnail,
+        })
+    return Response({"results": products_list})
+
+
 def get_product_variation_price(request, variation_id):
     variation = get_object_or_404(ProductVariation, id=variation_id)
     context = {
@@ -52,6 +95,7 @@ def get_product_variation_price(request, variation_id):
     return TemplateResponse(request, "components/product_variation_price.html", context=context)
 
 
+@login_required
 @api_view(["POST"])
 def add_review(request, product_id):
     product = get_object_or_404(Product, id=product_id)
@@ -90,6 +134,7 @@ def get_reviews(request, product_id):
     return TemplateResponse(request, "components/reviews.html", context=context)
 
 
+@login_required
 @api_view(["DELETE"])
 def delete_review(request, review_id):
     review = get_object_or_404(Review, id=review_id)
