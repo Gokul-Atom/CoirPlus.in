@@ -14,16 +14,7 @@
            "name": "Your Company Name",
            "description": "Payment Description",
            "order_id": "{{ order.razorpay_order_id }}",
-           "callback_url": "{{ request.scheme }}://{{ request.get_host}}{% url 'payment_success' token=order.token %}",
-           "redirect": true,
-           {% comment %}
-        //    "handler": function(response) {
-               // Handle the payment success response
-               // You can submit the form or redirect to a success page
-            //    document.forms[0].submit();
-            //    window.location.href = "{% url 'payment_success' %}?payment_id=" + response.razorpay_payment_id;
-        //    },
-        {% endcomment %}
+           "callback_url": "{% url 'payment_success' token=order.token %}",
            "prefill": {
                "name": "John Doe",
                "email": "john@example.com",

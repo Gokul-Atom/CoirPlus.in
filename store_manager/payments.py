@@ -17,6 +17,10 @@ class RazorpayAPI:
 
     def authorize_client(self):
         site_settings = SiteSettings.load()
+        self.live_api_key = site_settings.live_api_key
+        self.live_api_secret = site_settings.live_api_secret
+        self.test_api_key = site_settings.test_api_key
+        self.test_api_secret = site_settings.test_api_secret
         if site_settings.enable_razorpay:
             if site_settings.enable_live_mode:
                 self.client = razorpay.Client(auth=(self.live_api_key, self.live_api_secret))
@@ -88,6 +92,11 @@ class Razorpay(PaymentMethod):
     
     def validate_basket(self, basket, request):
         super().validate_basket(basket, request)
+    
+    def verify_payment_signature(self, params_dict):
+        razorpay = RazorpayAPI()
+        razorpay.authorize_client()
+        razorpay_api.verify_payment_signature(params_dict)
 
     def basket_payment(self, basket, request, *args, **kwargs):
         """
@@ -112,7 +121,7 @@ class Razorpay(PaymentMethod):
         if shipping_address:
             order.shipping_address = shipping_address.plain_address() if shipping_address else billing_address.plain_address()
         order.save(update_fields=["email", "billing_address", "shipping_address", "razorpay_order_id"])
-        basket.items.all().delete()
+        # basket.items.all().delete()
         return order
         # url = reverse("salesman-order-last") + f"?token={order.token}"
         if request.headers.get("HX-Request"):
