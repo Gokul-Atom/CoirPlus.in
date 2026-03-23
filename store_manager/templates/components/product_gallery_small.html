@@ -1,0 +1,65 @@
+{% load wagtailimages_tags %}
+
+{% with product_images=product.images.all %}
+<section id="image-carousel" class="splide" aria-label="{{ product.title }} images">
+    <div class="splide__track">
+        <ul class="splide__list">
+            {% for image in product_images|slice:3 %}
+            <li class="splide__slide">
+                {% image image.image width-800 format-webp class="d-block w-100 h-auto" %}
+            </li>
+            {% empty %}
+            <li class="splide__slide">
+                {% image placeholder_image width-800 format-webp class="d-block w-100 h-auto" %}
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+</section>
+{% if product_images %}
+<section id="thumbnail-carousel" class="splide thumbnail-splide mt-2" aria-label="{{ product.title }} thumbnails">
+    <div class="splide__track">
+        <ul class="splide__list justify-content-center">
+            {% for image in product_images|slice:3 %}
+            <li class="splide__slide">
+                {% image image.image width-80 format-webp class="d-block w-100 h-auto" %}
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+</section>
+{% endif %}
+
+<script>
+    function initSplide() {
+        const imageSplide = new Splide('#image-carousel', {
+            arrows: false,
+            type: "loop",
+            pagination: false,
+            lazyLoad: true,
+        });
+        {% if product_images %}
+        const thumbnailSplide = new Splide('#thumbnail-carousel', {
+            fixedWidth: 60,
+            fixedHeight: 60,
+            gap: 10,
+            rewind: true,
+            pagination: false,
+            isNavigation: true,
+            breakpoints: {
+                600: {
+                    fixedWidth: 60,
+                    fixedHeight: 60,
+                },
+            },
+        });
+        imageSplide.sync(thumbnailSplide);
+        {% endif %}
+        imageSplide.mount();
+        {% if product_images %}
+        thumbnailSplide.mount();
+        {% endif %}
+    }
+    document.addEventListener("DOMContentLoaded", initSplide);
+</script>
+{% endwith %}

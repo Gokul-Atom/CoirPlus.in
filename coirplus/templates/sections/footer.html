@@ -7,14 +7,26 @@
             <span class="bi bi-cart-fill"></span>
             <span class="visually-hidden">Shop</span>
         </a>
-        <a href="{% pageurl common_settings.wishlist_page %}" class="drawer-item">
-            <span class="bi bi-heart-fill"></span>
-            <span class="visually-hidden">Wishlist</span>
-        </a>
-        <button type="button" class="drawer-item btn" data-bs-toggle="offcanvas" data-bs-target="#cart-offcanvas">
-            <span class="bi bi-bag-fill"></span>
-            <span class="visually-hidden">Cart</span>
-        </button>
+        <div class="drawer-item">
+            <a href="{% pageurl common_settings.wishlist_page %}" id="drawer-wishlist" class="position-relative" x-data="{count: 0}" hx-get="/api/wishlist/quantity/" hx-swap="none" hx-trigger="load, refreshWishlistQuantity" @htmx:after-request="$data.count=JSON.parse(event.detail.xhr.response).quantity">
+                <span class="bi bi-heart-fill"></span>
+                <span class="visually-hidden">Wishlist</span>
+                <small class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                    <span class="text-white fw-semibold" x-text="count"></span>
+                    <small class="visually-hidden">items in wishlist</small>
+                </small>
+            </a>
+        </div>
+        <div class="drawer-item" data-bs-toggle="offcanvas" data-bs-target="#cart-offcanvas">
+            <button type="button" class="btn position-relative p-0" x-data="{ count: 0 }" hx-get="/api/basket/quantity/" hx-swap="none" hx-trigger="load, refreshCartQuantity from:body, htmx:afterRequest from:#basket-form" @htmx:after-request="$data.count=JSON.parse(event.detail.xhr.response).quantity" hx-on:click="htmx.trigger('#cart-offcanvas #cart-data', 'refreshCart');" x-data="{count: 0}">
+                <span class="bi bi-bag-fill"></span>
+                <span class="visually-hidden">Cart</span>
+                <small class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                    <span class="text-white fw-semibold" x-text="count"></span>
+                    <small class="visually-hidden">items in cart</small>
+                </small>
+            </button>
+        </div>
         <a href="{% pageurl common_settings.account_page %}" class="drawer-item">
             <span class="bi bi-person-fill"></span>
             <span class="visually-hidden">My Account</span>

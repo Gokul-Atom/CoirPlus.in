@@ -2,11 +2,15 @@
 
 <div class="product-card position-relative" x-data="{ data: {{product.product_details}}, selected_variation: null, wishlisted: {% wishlisted_products %} }">
     <div class="product-image">
+        {% if big_card %}
+            {% include "components/product_gallery_small.html" %}
+        {% else %}
         <a href="{% url 'product_page' slug=product.slug %}">
             {% with product_images=product.images.all %}
             {% image product_images.0.image|default:placeholder_image width-400 format-webp class="d-block w-100 h-auto" %}
             {% endwith %}
         </a>
+        {% endif %}
         <template x-if="selected_variation">
             <form action="/api/basket/" hx-post="/api/basket/" method="post" hx-swap="none" @htmx:after-request="htmx.trigger('.cart-qty', 'refreshCartQuantity'); document.querySelector('*[data-bs-target=\'#cart-offcanvas\']').click();" x-init="htmx.process($el)">
                 {% csrf_token %}
@@ -17,13 +21,13 @@
         </template>
     </div>
     <div class="position-absolute d-flex flex-column gap-3 actions">
-        <button class="action-item" hx-get="{% url 'quick_view_product_page' slug=product.slug %}" hx-target="#quick-view-modal-body > div" hx-indicator="#quick-view-modal-body" data-bs-toggle="modal" data-bs-target="#quick-view-modal" type="button" data-bs-toggle="tooltip" data-bs-placement="left" data-bs-title="Quick View" title="Quick View" style="--i: 1">
+        <button class="action-item" hx-get="{% url 'quick_view_product_page' slug=product.slug %}" hx-target="#quick-view-modal-body > div" hx-indicator="#quick-view-modal-body" data-bs-toggle="modal" data-bs-target="#quick-view-modal" type="button" data-bs-toggle="tooltip" data-bs-placement="left" data-bs-title="Quick View" title="Quick View" style="--i: 1" x-init="new bootstrap.Tooltip($el)">
             <span class="bi bi-eye"></span>
         </button>
         {% if request.user.is_authenticated %}
         <template x-if="selected_variation">
-            <form :action="'{% url 'toggle_wishlist' variation_id='0' %}'.replace('0', selected_variation ? selected_variation : data.variations[0].id)" x-effect="selected_variation; htmx.process($el)" :hx-post="'{% url 'toggle_wishlist' variation_id='0' %}'.replace('0', selected_variation ? selected_variation : data.variations[0].id)" @htmx:after-request="res=JSON.parse(event.detail.xhr.response || '{}'); res.status > 0 ? $data.wishlisted.push(res.id) : $data.wishlisted.splice($data.wishlisted.indexOf(res.id),1);" method="post" hx-swap="none">
-                <button class="action-item" type="submit" data-bs-toggle="tooltip" data-bs-placement="left" data-bs-title="Add to Wishlist" title="Wishlist" style="--i: 2">
+            <form :action="'{% url 'toggle_wishlist' variation_id='0' %}'.replace('0', selected_variation ? selected_variation : data.variations[0].id)" x-effect="selected_variation; htmx.process($el)" :hx-post="'{% url 'toggle_wishlist' variation_id='0' %}'.replace('0', selected_variation ? selected_variation : data.variations[0].id)" @htmx:after-request="res=JSON.parse(event.detail.xhr.response || '{}'); res.status > 0 ? $data.wishlisted.push(res.id) : $data.wishlisted.splice($data.wishlisted.indexOf(res.id),1); htmx.trigger('#drawer-wishlist', 'refreshWishlistQuantity');" method="post" hx-swap="none">
+                <button class="action-item" type="submit" data-bs-toggle="tooltip" data-bs-placement="left" data-bs-title="Wishlist" title="Wishlist" style="--i: 2" x-init="wishlisted; new bootstrap.Tooltip($el);">
                     <span class="bi" :class="wishlisted.find(w=>w==selected_variation) ? 'bi-heart-fill' : 'bi-heart'"></span>
                 </button>
             </form>

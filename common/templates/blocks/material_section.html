@@ -4,16 +4,24 @@
     <div class="material-cards">
         {% for card in self.cards %}
         <div class="material-card">
-            {% image card.image|default:placeholder_image width-500 format-webp class="d-block w-100 h-auto mx-auto image" %}
-            <div class="d-flex content align-items-center gap-3 justify-content-between material-content">
-                <div>
-                    <div class="card-title fs-4 h">{{ card.title }}</div>
-                    <div class="card-content">{% include_block card.description %}</div>
-                </div>
-                <div>
-                    <span class="bi bi-arrow-right-circle-fill fs-1 text-white"></span>
-                </div>
-            </div>
+            {% if card.link %}
+            <a href="{{ card.link }}">
+                {% elif card.page %}
+                <a href="{% pageurl card.page %}">
+                    {% endif %}
+                    {% image card.image|default:placeholder_image width-500 format-webp class="d-block w-100 h-auto mx-auto image" %}
+                    <div class="d-flex content align-items-center gap-3 justify-content-between material-content">
+                        <div>
+                            <div class="card-title fs-4 h">{{ card.title }}</div>
+                            <div class="card-content">{% include_block card.description %}</div>
+                        </div>
+                        <div>
+                            <span class="bi bi-arrow-right-circle-fill fs-1 text-white"></span>
+                        </div>
+                    </div>
+                    {% if card.link or card.page %}
+                </a>
+                {% endif %}
         </div>
         {% endfor %}
     </div>

@@ -54,7 +54,7 @@
                 <hr>
                 <form action="" method="post">
                     <div class="fs-5 h fw-semibold">Size<span class="fs-6" x-text="selected_variation ? ': ' + active_variation.attributes[0].value : ''"></span> </div>
-                    <div class="items d-flex flex-wrap gap-2">
+                    <div class="items d-flex flex-wrap gap-2 mt-2">
                         <template x-for="variation in product.variations">
                             <div>
                                 <input type="radio" name="variation" :id="'v-' + variation.id" :value="variation.id" x-model="selected_variation">
@@ -68,7 +68,7 @@
                 <hr>
                 <div class="fs-5 h fw-semibold">Quantity</div>
                 {% if request.user and request.user.is_authenticated %}
-                <form action="/api/basket/" hx-post="/api/basket/" hx-swap="none" method="post" x-data="{ qty: 1, buttonText: 'Add to Cart' }" class="d-flex gap-3" id="basket-form" @htmx:after-request="$data.buttonText='Added'; document.querySelector('*[data-bs-target=\'#cart-offcanvas\']').click(); const submitBtn=$el.querySelector('button[type=\'submit\']'); submitBtn.disabled=true; setTimeout(() => {$data.buttonText='Add to Cart'; submitBtn.disabled=false;}, 4000);">
+                <form action="/api/basket/" hx-post="/api/basket/" hx-swap="none" method="post" x-data="{ qty: 1, buttonText: 'Add to Cart' }" class="d-flex gap-3 mt-2" id="basket-form" @htmx:after-request="$data.buttonText='Added'; document.querySelector('*[data-bs-target=\'#cart-offcanvas\']').click(); const submitBtn=$el.querySelector('button[type=\'submit\']'); submitBtn.disabled=true; setTimeout(() => {$data.buttonText='Add to Cart'; submitBtn.disabled=false;}, 4000);">
                     {% csrf_token %}
                     <input type="hidden" name="product_type" value="store_manager.ProductVariation">
                     <input type="hidden" name="product_id" :value="selected_variation">
@@ -84,9 +84,15 @@
                 {% endif %}
             </div>
             <hr>
-            {% if variation.sku %}
-            <span class="sku"><strong>SKU:</strong> <span x-text="active_variation.sku"></span></span>
-            {% endif %}
+            <div class="d-flex flex-wrap gap-3">
+                {% if variation.sku %}
+                <span class="sku"><strong>SKU:</strong> <span x-text="active_variation.sku"></span></span>
+                {% endif %}
+                <span class="vr"></span>
+                {% if variation.warranty %}
+                <span class="warranty"><strong>Warranty:</strong> <span x-text="active_variation.warranty + ' Years'"></span></span>
+                {% endif %}
+            </div>
         </div>
     </div>
     <hr>
@@ -105,4 +111,5 @@
     </div>
 </div>
 {% endwith %}
+{% include "components/quick_view_modal.html" %}
 {% endblock %}

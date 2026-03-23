@@ -52,13 +52,16 @@
                 </button>
             </div>
 
-            <div class="collapse navbar-collapse">
-                <form class="d-flex position-relative w-100 search-form nav-search-form" role="search" action="{% pageurl common_settings.shop_page %}">
+            <div class="position-relative collapse navbar-collapse" x-data="{ products: {} }">
+                <form class="d-flex position-relative w-100 search-form nav-search-form" role="search" action="{% pageurl common_settings.shop_page %}" hx-get="{% url 'product_suggestions' %}" hx-trigger="input delay:300ms" hx-target=".suggestions" hx-indicator=".suggestions" hx-swap="none" @htmx:after-request="$data.products=JSON.parse(event.detail.xhr.response || '{}').results;">
                     <input class="form-control rounded-pill" type="search" name="q" placeholder="Search" value="{{ request.GET.q }}" aria-label="Search" />
                     <div class="position-absolute">
                         <button class="btn btn-primary rounded-pill" type="submit"><span class="bi bi-search"></span><span class="visually-hidden">Search</span></button>
                     </div>
                 </form>
+                <div class="position-absolute suggestions-lg">
+                    {% include "components/search_suggestions.html" %}
+                </div>
             </div>
 
             <div class="d-none d-lg-flex gap-3 align-items-center">
@@ -218,15 +221,17 @@
                 <h1 class="modal-title fs-5" id="search-modalLabel">Search Products</h1>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div class="modal-body">
-                <form class="d-flex position-relative w-100 search-form nav-search-form" role="search" action="{% pageurl common_settings.shop_page %}">
+            <div class="modal-body" x-data="{ products: {} }">
+                <form class="d-flex position-relative w-100 search-form nav-search-form" role="search" action="{% pageurl common_settings.shop_page %}" hx-get="{% url 'product_suggestions' %}" hx-swap="none" hx-trigger="input delay:300ms" hx-target=".suggestions" hx-indicator=".suggestions" @htmx:after-request="$data.products=JSON.parse(event.detail.xhr.response || '{}').results">
                     <input class="form-control rounded-pill" type="search" name="q" placeholder="Search" value="{{ request.GET.q }}" aria-label="Search" />
                     <div class="position-absolute">
                         <button class="btn btn-primary rounded-pill" type="submit"><span class="bi bi-search"></span><span class="visually-hidden">Search</span></button>
                     </div>
                 </form>
+                {% include "components/search_suggestions.html" %}
             </div>
         </div>
     </div>
+</div>
 </div>
 {% endwith %}

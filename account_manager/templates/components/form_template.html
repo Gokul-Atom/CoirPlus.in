@@ -60,10 +60,9 @@
     {{ form.phone_number }}
     {{ form.phone_number.errors }}
 </div>
-{{ form.is_billing }}
 
 {% if form.prefix == "billing" %}
-{{ form.is_shipping }}
+{{ form.is_billing }}
 {% else %}
-<input type="checkbox" name="shipping-is_shipping" class="form-check-input" aria-describedby="id_shipping-is_shipping_helptext" id="id_shipping-is_shipping" :checked="open">
+<input type="checkbox" name="shipping-is_shipping" class="form-check-input d-none" aria-describedby="id_shipping-is_shipping_helptext" id="id_shipping-is_shipping" :checked="open">
 {% endif %}

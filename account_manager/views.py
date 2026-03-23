@@ -11,11 +11,13 @@ from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
+from django.contrib import messages
 
 from store_manager.models import ProductVariation
 from store_manager.serializers import ProductVariationSerializer
 from .models import CheckoutAddress
 from .forms import CheckoutAddressForm
+from common.settings import SiteSettings
 
 
 # Create your views here.
@@ -28,6 +30,7 @@ def checkout_page(request):
         billing_form = CheckoutAddressForm(request.POST, prefix="billing")
         shipping_form = CheckoutAddressForm(request.POST, prefix="shipping")
         payment_identifier = request.POST.get("payment-method")
+        order_notes = request.POST.get("order-notes")
         print(request.POST)
         if billing_form.is_valid():
             billing = billing_form.save(commit=False)
@@ -41,9 +44,22 @@ def checkout_page(request):
                 shipping = None
             try:
                 payment_method = payment_methods_pool.get_payment(payment_identifier)
-                order = payment_method.basket_payment(basket, request, shipping_address=shipping, billing_address=billing, email=billing.email)
+                order = payment_method.basket_payment(
+                    basket,
+                    request,
+                    shipping_address=shipping,
+                    billing_address=billing,
+                    email=shipping.email if shipping else billing.email,
+                    phone_number=shipping.phone_number if shipping else billing.phone_number,
+                    order_notes=order_notes,
+                    )
                 if request.headers.get("HX-Request"):
-                    response = HttpResponse()
+                    context= {
+                        "different_shipping_address": bool(different_shipping_address),
+                        "shipping_form": shipping_form,
+                        "billing_form": billing_form,
+                    }
+                    response = TemplateResponse(request, "components/checkout_form.html", context=context)
                     response["HX-Redirect"] = reverse("payment_page", kwargs={"token": order.token})
                     return response
                 return redirect("payment_page", token=order.token)
@@ -74,8 +90,10 @@ def checkout_page(request):
 @login_required
 def payment_page(request, token):
     order = Order.objects.filter(token=token).first()
+    common_settings = SiteSettings.load()
     context = {
         "order": order,
+        "razorpay_api_key": common_settings.live_api_key if common_settings.enable_live_mode else common_settings.test_api_key
     }
     print(order)
     return TemplateResponse(request, "account_manager/payment_page.html", context=context)
@@ -85,26 +103,29 @@ def payment_page(request, token):
 @csrf_exempt
 def payment_success_view(request, token):
     order = Order.objects.filter(token=token).first()
-    order_id = request.POST.get('razorpay_order_id')
-    payment_id = request.POST.get('razorpay_payment_id')
-    signature = request.POST.get('razorpay_signature')
-    print(request.POST)
+    data = request.POST
+    order_id = data.get('razorpay_order_id')
+    payment_id = data.get('razorpay_payment_id')
+    signature = data.get('razorpay_signature')
+    print(data)
     params_dict = {
         'razorpay_order_id': order_id,
         'razorpay_payment_id': payment_id,
         'razorpay_signature': signature,
     }
-    # payment_method = payment_methods_pool.get_payment("razorpay")
-    # result = payment_method.verify_payment_signature(params_dict)
-    result = True
+    payment_method = payment_methods_pool.get_payment("razorpay")
+    result = payment_method.verify_payment_signature(params_dict)
     if result:
         order.pay(order.total, payment_method="razorpay", transaction_id=payment_id)
         order.razorpay_payment_id = payment_id
         order.status = "PAID"
         order.save()
-        return render(request, 'account_manager/payment_success.html')
+        messages.success(request, "Payment Success", extra_tags="success")
+        # return render(request, 'account_manager/payment_success.html')
+    else:
+        messages.error(request, "Payment Failed", extra_tags="danger")
     return redirect("my_orders")
-    return render(request, 'account_manager/payment_failure.html')
+    # return render(request, 'account_manager/payment_failure.html')
 
 
 @login_required
@@ -141,6 +162,13 @@ def get_wishlist(request):
     wishlist = request.user.wishlisted_products.all()
     serializer = ProductVariationSerializer(wishlist, many=True)
     return Response(serializer.data)
+
+
+@login_required
+@api_view(["GET"])
+def get_wishlist_quantity(request):
+    wishlist = request.user.wishlisted_products.all()
+    return Response({"quantity": wishlist.count()})
 
 
 @login_required

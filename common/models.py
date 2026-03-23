@@ -31,6 +31,19 @@ class ImageRendition(AbstractRendition):
         ]
 
 
+class ScheduledMessage(models.Model):
+    to_emails = models.TextField(help_text="Comma-separated list of recipient emails")
+    subject = models.CharField(max_length=255)
+    text_body = models.TextField(blank=True, null=True)
+    html_body = models.TextField(blank=True, null=True)
+    scheduled_time = models.DateTimeField(blank=True, null=True)
+    sent_at = models.DateTimeField(blank=True, null=True)
+    log = models.TextField(blank=True, null=True)
+
+    def __str__(self):
+        return f"{self.subject} -> {self.to_emails}"
+
+
 # pages
 class SimplePage(PageBase):
     pass

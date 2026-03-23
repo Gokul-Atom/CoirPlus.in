@@ -79,6 +79,54 @@
   }
 }
 
+.featured-products-section .featured-products {
+  display: grid;
+  gap: 1rem;
+}
+@media screen and (min-width: 768px) {
+  .featured-products-section .featured-products {
+    gap: 1.5rem;
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+@media screen and (min-width: 992px) {
+  .featured-products-section .featured-products {
+    gap: 2rem;
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+.featured-products-section .featured-products .product-card .product-image .splide__track--nav > .splide__list > .splide__slide {
+  border-radius: 1rem;
+  overflow: hidden;
+}
+.featured-products-section .featured-products .product-card .product-image .splide__track--nav > .splide__list > .splide__slide.is-active {
+  border-color: #769840;
+}
+.featured-products-section .featured-products .product-card:hover .product-image img {
+  transform-origin: left;
+}
+.featured-products-section .featured-products .product-card:hover .product-image .thumbnail-splide img {
+  transform: none;
+}
+
+.best-selling-products-section .best-selling-products {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(2, 1fr);
+}
+@media screen and (min-width: 768px) {
+  .best-selling-products-section .best-selling-products {
+    gap: 1.5rem;
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+@media screen and (min-width: 992px) {
+  .best-selling-products-section .best-selling-products {
+    gap: 2rem;
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
 .material-section .material-cards {
   padding: 1rem 0;
   display: grid;
@@ -99,6 +147,9 @@
   border-radius: 1rem;
   overflow: hidden;
 }
+.material-section .material-cards .material-card img {
+  transition: all ease 300ms;
+}
 .material-section .material-cards .material-card .material-content {
   position: absolute;
   width: 100%;
@@ -118,6 +169,9 @@
   font-weight: 500;
   display: none;
   overflow: hidden;
+}
+.material-section .material-cards .material-card:hover img {
+  transform: scale(1.05);
 }
 .material-section .material-cards .material-card:hover .material-content {
   background: rgba(0, 0, 0, 0.6901960784);
@@ -241,7 +295,7 @@
 .cta-section > div .cta-title * {
   color: white !important;
 }
-.cta-section > div .cta-button {
+.cta-section > div \ .cta-button {
   padding: 0.5rem 2rem;
 }
 
@@ -253,4 +307,8 @@
   .two-column-image-block {
     grid-template-columns: repeat(2, 1fr);
   }
+}
+
+.product-gallery img {
+  border-radius: 1rem;
 }/*# sourceMappingURL=sections.css.map */

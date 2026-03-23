@@ -23,9 +23,9 @@
 {% endif %}
 <div class="box-small">
     <div class="account-menu">
-        <div class="mvw">
+        <div class="mvw box box-p">
             <div>
-                <p class="fw-bold fs-2">{% trans "Account Menu" %}</p>
+                <p class="h fs-1">{% trans "Account Menu" %}</p>
                 <ul class="list-unstyled d-flex flex-wrap gap-4">
                     {% if user.is_authenticated %}
                     {% url 'account_email' as email_url_ %}

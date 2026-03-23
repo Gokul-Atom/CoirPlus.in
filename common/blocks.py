@@ -111,6 +111,32 @@ class HomeHeroSection(blocks.StructBlock):
         template = "blocks/home_hero_section.html"
 
 
+class FeaturedProductsSection(blocks.StructBlock):
+    heading = blocks.CharBlock(required=True)
+
+    def get_context(self, value, parent_context=None):
+        from store_manager.models import Product
+        context = super().get_context(value, parent_context)
+        context["products"] = Product.objects.filter(is_featured=True).all()
+        return context
+
+    class Meta:
+        template = "blocks/featured_products_section.html"
+
+
+class BestSellingProductsSection(blocks.StructBlock):
+    heading = blocks.CharBlock(required=True)
+
+    def get_context(self, value, parent_context=None):
+        from store_manager.models import Product
+        context = super().get_context(value, parent_context)
+        context["products"] = Product.objects.filter(is_best_selling=True).all()
+        return context
+
+    class Meta:
+        template = "blocks/best_selling_products_section.html"
+
+
 class IconCardItem(blocks.StructBlock):
     icon = ImageChooserBlock()
     title = blocks.CharBlock()
@@ -128,6 +154,8 @@ class MaterialCardItem(blocks.StructBlock):
     image = ImageChooserBlock()
     title = blocks.CharBlock()
     description = BlocksBase()
+    link = blocks.CharBlock(required=False)
+    page = blocks.PageChooserBlock(required=False)
 
 
 class MaterialCards(CSSBase):
@@ -561,6 +589,8 @@ class CustomBlock(BlocksBase):
     # container = ContainerBlock()
     home_hero_section = HomeHeroSection(group="Sections")
     icon_cards = IconCards(group="Sections")
+    featured_products = FeaturedProductsSection(group="Sections")
+    best_selling_products = BestSellingProductsSection(group="Sections")
     material_cards = MaterialCards(group="Sections")
     image_block = ImageBlock(group="Sections")
     two_column_image_block = TwoColumnImageBlock(group="Sections")

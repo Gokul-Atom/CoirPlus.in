@@ -39,12 +39,14 @@ class RazorpayAPI:
     
     def verify_payment_signature(self, params_dict):
         try:
-            # try:
+            if self.client is None:
+                self.authorize_client()
             self.client.utility.verify_payment_signature(params_dict)
             # except AttributeError:
             #     return False
             return True
         except razorpay.errors.SignatureVerificationError as e:
+            print(e)
             return False
 
 razorpay_api = RazorpayAPI()
@@ -94,9 +96,9 @@ class Razorpay(PaymentMethod):
         super().validate_basket(basket, request)
     
     def verify_payment_signature(self, params_dict):
-        razorpay = RazorpayAPI()
-        razorpay.authorize_client()
-        razorpay_api.verify_payment_signature(params_dict)
+        razorpay_api = RazorpayAPI()
+        razorpay_api.authorize_client()
+        return razorpay_api.verify_payment_signature(params_dict)
 
     def basket_payment(self, basket, request, *args, **kwargs):
         """
@@ -113,14 +115,24 @@ class Razorpay(PaymentMethod):
         order.razorpay_order_id = razorpay_order["id"]
         email = kwargs.get("email")
         billing_address = kwargs.get("billing_address")
-        shipping_address = kwargs.get("shipping_address")
+        shipping_address = kwargs.get("shipping_address") or kwargs.get("billing_address")
+        phone_number = kwargs.get("phone_number")
+        order.extra["phone_number"] = phone_number
+        order_notes = kwargs.get("order_notes")
+        if order_notes:
+            OrderNote = get_salesman_model('OrderNote')
+            OrderNote.objects.create(
+                order=order,
+                message="This is a customer note.",
+                public=True  # Set to False for internal notes
+            )
         if email:
             order.email = email
         if billing_address:
             order.billing_address = billing_address.plain_address()
         if shipping_address:
             order.shipping_address = shipping_address.plain_address() if shipping_address else billing_address.plain_address()
-        order.save(update_fields=["email", "billing_address", "shipping_address", "razorpay_order_id"])
+        order.save()
         # basket.items.all().delete()
         return order
         # url = reverse("salesman-order-last") + f"?token={order.token}"

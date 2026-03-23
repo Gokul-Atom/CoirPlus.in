@@ -48,6 +48,16 @@
                     </td>
                 </tr>
                 {% endif %}
+                {% if variation.warranty %}
+                <tr>
+                    <th>
+                        Warranty
+                    </th>
+                    <td>
+                        {{ variation.warranty|floatformat:"-0" }} Years
+                    </td>
+                </tr>
+                {% endif %}
                 {% with attributes=product.product_attributes.attributes keys=product.product_attributes.keys %}
                 {% for key in keys %}
                 <tr>

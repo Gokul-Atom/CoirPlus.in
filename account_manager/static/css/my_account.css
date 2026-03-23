@@ -62,7 +62,7 @@
   padding: 1rem;
   border: 1px solid #E6E6E6;
 }
-.order-details > div .product-details .product:first-child {
+.order-details > div .product-details .product:nth-child(2) {
   border-radius: 1rem 1rem 0 0;
 }
 .order-details > div .product-details .product:last-child {

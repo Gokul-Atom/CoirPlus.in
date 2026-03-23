@@ -138,7 +138,7 @@ class CheckoutAddress(models.Model):
     def display_address(self):
         temp = f"<strong>{self.full_name}</strong>"
         temp += ",<br> " + self.company if self.company else ""
-        temp += f"<br>{self.full_address}, {self.city} - {self.zip}, {self.state}, {self.country.name}"
+        temp += f",<br>{self.full_address}, {self.city} - {self.zip}, {self.state}, {self.country.name}"
         temp += f"<br><strong>Landmark:</strong> {self.landmark}" if self.landmark else ""
         temp += f"<br><strong>Phone No.:</strong> {self.phone_number}"
         return temp
@@ -146,7 +146,7 @@ class CheckoutAddress(models.Model):
     def plain_address(self):
         temp = f"{self.full_name}"
         temp += ", " + self.company if self.company else ""
-        temp += f"{self.full_address}, {self.city} - {self.zip}, {self.state}, {self.country.name} | "
+        temp += f", {self.full_address}, {self.city} - {self.zip}, {self.state}, {self.country.name} | "
         temp += f"Landmark: {self.landmark} | " if self.landmark else ""
         temp += f"Phone No.: {self.phone_number}"
         return temp

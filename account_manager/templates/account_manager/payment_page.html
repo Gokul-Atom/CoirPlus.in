@@ -1,29 +1,57 @@
 {% extends "base.html" %}
 
 {% block content %}
-{{ order.total }}
+<div class="box-small box-p payment-div">
+    <div>
+
+        <h1 class="page-title">Pay Order</h1>
+        <table class="table w-100">
+            <tbody>
+                <tr>
+                    <td>Subtotal</td>
+                    <td class="amt">{{ order.subtotal }}</td>
+                </tr>
+                {% for row in order.extra_rows %}
+                <tr>
+                    <td>{{ row.label }}</td>
+                    <td class="amt">{{ row.amount }}</td>
+                </tr>
+                {% endfor %}
+                <tr>
+                    <th class="fw-bold h fs-5">Total</th>
+                    <th class="amt fs-5 fw-bold h">{{ order.total }}</th>
+                </tr>
+            </tbody>
+        </table>
+        <div class="text-center">
+            <button class="btn btn-primary fs-1 fw-semibold" onclick="initiatePay();">Pay Now</button>
+        </div>
+    </div>
+</div>
 
 <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 <form action="{% url 'payment_success' token=order.token %}" method="POST">
-   <input type="hidden" name="order_id" value="{{ order.razorpay_order_id }}">
-   <script>
-       var options = {
-           "key": "{{ settings.common.SiteSettings.test_api_key }}",
-           "amount": "{{ order.total }}",
-           "currency": "INR",
-           "name": "Your Company Name",
-           "description": "Payment Description",
-           "order_id": "{{ order.razorpay_order_id }}",
-           "callback_url": "{% url 'payment_success' token=order.token %}",
-           "prefill": {
-               "name": "John Doe",
-               "email": "john@example.com",
-               "contact": "9876543210"
-           }
-       };
-       var rzp = new Razorpay(options);
-       rzp.open();
-   </script>
+    <input type="hidden" name="order_id" value="{{ order.razorpay_order_id }}">
+    <script>
+        function initiatePay() {
+            var options = {
+                "key": "{{ razorpay_api_key }}",
+                "amount": "{{ order.total }}",
+                "currency": "INR",
+                "name": "{{ common.settings.SiteSettings.site_title }}",
+                "description": "Paid for Order #{{ order.ref }}",
+                "order_id": "{{ order.razorpay_order_id }}",
+                "callback_url": "{% url 'payment_success' token=order.token %}",
+                "prefill": {
+                    "name": "{{ order.user.display_name }}",
+                    "email": "{{ order.email }}",
+                    "contact": "{{ order.phone_number }}"
+                }
+            };
+            var rzp = new Razorpay(options);
+            rzp.open();
+        }
+    </script>
 </form>
 
 {% endblock %}

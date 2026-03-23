@@ -6,6 +6,7 @@ urlpatterns = [
     path("checkout/", view=views.checkout_page, name="checkout"),
     path("payment/success/<str:token>/", view=views.payment_success_view, name="payment_success"),
     path("payment/<str:token>/", view=views.payment_page, name="payment_page"),
+    path("api/wishlist/quantity/", view=views.get_wishlist_quantity, name="get_wishlist_quantity"),
     path("api/wishlist/", view=views.get_wishlist, name="get_wishlist"),
     path("api/wishlist-to-basket/", view=views.add_from_wishlist, name="add_from_wishlist"),
     path("api/wishlist/<int:variation_id>/", view=views.toggle_wishlist, name="toggle_wishlist"),

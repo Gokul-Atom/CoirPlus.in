@@ -73,6 +73,58 @@
   }
 }
 
+.featured-products-section {
+  .featured-products {
+    display: grid;
+    gap: 1rem;
+    @media screen and (min-width: 768px) {
+      gap: 1.5rem;
+      grid-template-columns: repeat(2, 1fr);
+    }
+    @media screen and (min-width: 992px) {
+      gap: 2rem;
+      grid-template-columns: repeat(3, 1fr);
+    }
+    .product-card {
+      .product-image {
+        .splide__track--nav > .splide__list > .splide__slide {
+          border-radius: $border-radius;
+          overflow: hidden;
+          &.is-active {
+            border-color: $primary;
+          }
+        }
+      }
+    }
+    .product-card {
+      &:hover .product-image {
+        img {
+          transform-origin: left;
+        }
+        .thumbnail-splide img {
+          transform: none;
+        }
+      }
+    }
+  }
+}
+
+.best-selling-products-section {
+  .best-selling-products {
+    display: grid;
+    gap: 1rem;
+    grid-template-columns: repeat(2, 1fr);
+    @media screen and (min-width: 768px) {
+      gap: 1.5rem;
+      grid-template-columns: repeat(3, 1fr);
+    }
+    @media screen and (min-width: 992px) {
+      gap: 2rem;
+      grid-template-columns: repeat(4, 1fr);
+    }
+  }
+}
+
 .material-section {
   .material-cards {
     padding: 1rem 0;
@@ -88,6 +140,9 @@
       position: relative;
       border-radius: $border-radius;
       overflow: hidden;
+      img {
+        transition: all ease 300ms;
+      }
       .material-content {
         position: absolute;
         width: 100%;
@@ -109,6 +164,9 @@
         }
       }
       &:hover {
+        img {
+          transform: scale(1.05);
+        }
         .material-content {
           background: #000000b0;
           .card-content * {
@@ -228,8 +286,8 @@
     .cta-title,
     .cta-title * {
       color: white !important;
-    }\
-    .cta-button {
+    }
+    \ .cta-button {
       padding: 0.5rem 2rem;
     }
   }
@@ -244,7 +302,7 @@
 }
 
 .product-gallery {
-    img {
-        border-radius: $border-radius;
-    }
+  img {
+    border-radius: $border-radius;
+  }
 }

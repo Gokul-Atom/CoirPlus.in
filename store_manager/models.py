@@ -107,6 +107,12 @@ class Product(SEOMixin, SEOExtraMixin, TimestampMixin, ClusterableModel):
                 chooser_field_name="image"
             ),
         ], heading="Gallery"),
+        MultiFieldPanel([
+            FieldRowPanel([
+                FieldPanel("is_featured"),
+                FieldPanel("is_best_selling"),
+            ])
+        ])
     ]
     edit_handler = TabbedInterface([
         ObjectList(panels, heading="Content"),
@@ -152,6 +158,7 @@ class Product(SEOMixin, SEOExtraMixin, TimestampMixin, ClusterableModel):
                 'sale_price': str(var.sale_price) if var.sale_price else None,
                 'base_price': str(var.base_price) if var.base_price else None,
                 'stock': var.stock,
+                'warranty': str(int(var.warranty)),
             })
         data = {
             "price_range": self.price_range,

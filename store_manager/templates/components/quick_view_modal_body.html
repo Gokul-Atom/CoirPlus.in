@@ -80,9 +80,15 @@
                 {% endif %}
             </div>
             <hr>
-            {% if variation.sku %}
-            <span class="sku"><strong>SKU:</strong> <span x-text="active_variation.sku"></span></span>
-            {% endif %}
+            <div class="d-flex flex-wrap gap-3">
+                {% if variation.sku %}
+                <span class="sku"><strong>SKU:</strong> <span x-text="active_variation.sku"></span></span>
+                {% endif %}
+                <span class="vr"></span>
+                {% if variation.warranty %}
+                <span class="warranty"><strong>Warranty:</strong> <span x-text="active_variation.warranty + ' Years'"></span></span>
+                {% endif %}
+            </div>
         </div>
     </div>
 </div>

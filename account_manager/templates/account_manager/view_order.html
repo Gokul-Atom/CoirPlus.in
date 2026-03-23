@@ -36,7 +36,13 @@
             </div>
             <div class="order-extra">
                 <div class="order-notes">
-
+                    {% if order.notes.all %}
+                    <span class="fs-3 h">Order Notes</span>
+                    {% for note in order.notes.all %}
+                    <p>{{ note.message }}</p>
+                    {% endfor %}
+                    <hr class="d-md-none">
+                    {% endif %}
                 </div>
                 <div class="breakdown">
                     <div class="d-flex flex-wrap gap-3 justify-content-between">
@@ -85,24 +91,39 @@
                     <tr>
                         <th>Payment Method</th>
                         <td>
-                            <template x-for="payment in order.payments">
-                                <span x-text="payment.payment_method.toUpperCase()"></span>
+                            <template x-if="order?.payments">
+                                <template x-for="payment in order?.payments">
+                                    <span x-text="payment.payment_method ? payment.payment_method.toUpperCase() : '-'"></span>
+                                </template>
+                            </template>
+                            <template x-if="!order?.payments">
+                                <span>-</span>
                             </template>
                         </td>
                     </tr>
                     <tr>
                         <th>Amount Paid</th>
                         <td>
-                            <template x-for="payment in order.payments">
-                                <span x-text="'₹' + payment.amount"></span>
+                            <template x-if="order?.payments">
+                                <template x-for="payment in order?.payments">
+                                    <span x-text="payment.amount ? '₹' + payment.amount : '-'"></span>
+                                </template>
+                            </template>
+                            <template x-if="!order?.payments">
+                                <span>-</span>
                             </template>
                         </td>
                     </tr>
                     <tr>
                         <th>Payment Done</th>
                         <td>
-                            <template x-for="payment in order.payments">
-                                <span x-text="payment.date_created.toLocaleString()"></span>
+                            <template x-if="order?.payments">
+                                <template x-for="payment in order?.payments">
+                                    <span x-text="payment.date_created ? payment.date_created.toLocaleString() : '-'"></span>
+                                </template>
+                            </template>
+                            <template x-if="!order?.payments">
+                                <span>-</span>
                             </template>
                         </td>
                     </tr>

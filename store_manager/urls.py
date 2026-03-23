@@ -10,7 +10,7 @@ urlpatterns = [
     path("product/<str:slug>/quick_view/", view=views.quick_view_product_page, name="quick_view_product_page"),
     path("product/<str:slug>/", view=views.product_page, name="product_page"),
     path('api/', include(router.urls)),
-    path("api/search/", view=views.product_suggestions, name="product_suggestion"),
+    path("api/search/", view=views.product_suggestions, name="product_suggestions"),
     # path("api/product-variation/<int:variation_id>/price/", view=views.get_product_variation_price, name="get_product_variation_price"),
     path("api/reviews/<int:product_id>/add/", view=views.add_review, name="add_review"),
     path("api/reviews/<int:product_id>/", view=views.get_reviews, name="get_reviews"),

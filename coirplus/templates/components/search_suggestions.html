@@ -1,0 +1,27 @@
+<ul class="list-unstyled suggestions mt-3 mb-0 gap-3 d-flex flex-column">
+    {% include "components/htmx_indicator.html" %}
+    <template x-for="product in products">
+        <li class="product-item">
+            <a :href="'{% url 'product_page' slug='__PRODUCT__' %}'.replace('__PRODUCT__', product.slug)">
+                <div class="d-flex gap-3">
+                    <img :src="product.thumbnail" alt="product.name" srcset="">
+                    <div class="d-flex flex-column">
+                        <span class="fs-6 fw-semibold mb-2" x-text="product.name"></span>
+                        <template x-if="product.price_range.max">
+                            <div>
+                                <span class="from amt fw-bold" x-text="product?.price_range?.min"></span>
+                                <span class="bi bi-dash"></span>
+                                <span class="to amt fw-bold" x-text="product?.price_range?.max">{{ product.price_range.max }}</span>
+                            </div>
+                        </template>
+                        <template x-if="!product.price_range.max">
+                            <div>
+                                <span class="from amt fw-bold" x-text="product?.price_range?.min"></span>
+                            </div>
+                        </template>
+                    </div>
+                </div>
+            </a>
+        </li>
+    </template>
+</ul>

@@ -95,4 +95,19 @@ header nav .brand-logo {
 }
 #menu-offcanvas .nav-pills .nav-item:last-child .nav-link {
   border-radius: 0 50rem 50rem 0;
+}
+
+.suggestions-lg {
+  width: 100%;
+  top: 100%;
+  background: white;
+}
+.suggestions-lg .suggestions:has(li) {
+  box-shadow: 0 0 6px #E6E6E6;
+  padding: 1rem;
+  border-radius: 1rem;
+}
+
+.suggestions img {
+  border-radius: 1rem;
 }/*# sourceMappingURL=header.css.map */
