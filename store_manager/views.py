@@ -69,6 +69,20 @@ def product_page(request, slug):
     return TemplateResponse(request, "store_manager/product_page.html", context=context)
 
 
+def quick_view_product_page(request, slug):
+    product = get_object_or_404(Product, slug=slug)
+    variation_id = request.GET.get("vid")
+    if variation_id is None:
+        first_variation = product.product_variations.first()
+        variation_id = first_variation.id if first_variation else None
+    variation = get_object_or_404(ProductVariation, product=product, id=variation_id)
+    context = {
+        "product": product,
+        "variation": variation,
+    }
+    return TemplateResponse(request, "components/quick_view_modal_body.html", context=context)
+
+
 # APIs
 @api_view(["GET"])
 def product_suggestions(request):
@@ -87,12 +101,12 @@ def product_suggestions(request):
     return Response({"results": products_list})
 
 
-def get_product_variation_price(request, variation_id):
-    variation = get_object_or_404(ProductVariation, id=variation_id)
-    context = {
-        "variation": variation
-    }
-    return TemplateResponse(request, "components/product_variation_price.html", context=context)
+# def get_product_variation_price(request, variation_id):
+#     variation = get_object_or_404(ProductVariation, id=variation_id)
+#     context = {
+#         "variation": variation
+#     }
+#     return TemplateResponse(request, "components/product_variation_price.html", context=context)
 
 
 @login_required
@@ -144,3 +158,23 @@ def delete_review(request, review_id):
     response = HttpResponse()
     response["HX-Trigger"] = "refreshReviews"
     return response
+
+
+# views.py
+from salesman.basket.views import BasketViewSet
+from rest_framework.response import Response
+from django.shortcuts import redirect
+
+class CustomBasketViewSet(BasketViewSet):
+    def list(self, request, *args, **kwargs):
+        print()
+        print()
+        print()
+        print()
+        print("run")
+        print()
+        print()
+        print()
+        if 'wishlist' in request.query_params:
+            return redirect('get_wishlist')
+        return super().list(request, *args, **kwargs)   

@@ -1,0 +1,31 @@
+.post-main {
+  display: grid;
+  gap: 2rem;
+}
+@media screen and (min-width: 992px) {
+  .post-main {
+    grid-template-columns: 8fr 4fr;
+  }
+}
+.post-main .post-sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  box-shadow: 0 0 6px #E6E6E6;
+  padding: 1rem;
+  border-radius: 1rem;
+}
+.post-main .post-sidebar .related-posts .posts {
+  display: grid;
+  gap: 2rem;
+}
+@media screen and (min-width: 576px) {
+  .post-main .post-sidebar .related-posts .posts {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+@media screen and (min-width: 992px) {
+  .post-main .post-sidebar .related-posts .posts {
+    grid-template-columns: 12fr;
+  }
+}/*# sourceMappingURL=blog_post.css.map */

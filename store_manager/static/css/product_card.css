@@ -25,7 +25,7 @@
   top: 2rem;
   right: 1rem;
 }
-.product-card .actions a {
+.product-card .actions .action-item {
   aspect-ratio: 1;
   border-radius: 50rem;
   padding: 0.5rem;
@@ -37,7 +37,7 @@
   transition: all ease 150ms calc(var(--i, 0) * 100ms);
   pointer-events: none;
 }
-.product-card .actions a .bi {
+.product-card .actions .action-item .bi {
   display: flex;
   font-size: 1.5rem;
 }
@@ -47,7 +47,7 @@
 .product-card:hover .product-image .add-to-cart-btn {
   transform: translate(-50%, -1rem);
 }
-.product-card:hover .actions a {
+.product-card:hover .actions .action-item {
   opacity: 1;
   pointer-events: auto;
   transform: translateX(0);

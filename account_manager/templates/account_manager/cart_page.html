@@ -10,7 +10,7 @@
 {% block content %}
 <div class="py-5 px-3">
     <h1 class="page-title">{{ page.title }}</h1>
-    <div x-data="{basket:{}}" class="cart-info" :class="{'d-block': !basket?.items?.length}">
+    <div x-data="{basket:{}}" class="cart-info" :class="{'d-block': !basket?.items?.length}" hx-get="/api/basket/" hx-swap="none" hx-trigger="load" @htmx:after-request="$data.basket=JSON.parse(event.detail.xhr.response || '{}')">
         <template x-if="basket?.items?.length">
             <div class="table-responsive">
                 <table class="table">
@@ -23,11 +23,20 @@
                             <th>Subtotal</th>
                         </tr>
                     </thead>
-                    <tbody hx-get="/api/basket/" hx-swap="none" hx-trigger="load" @htmx:after-request="$data.basket=JSON.parse(event.detail.xhr.response || '{}')">
+                    <tbody>
                         <template x-for="item in basket.items" :key="item.ref">
                             <tr>
                                 <td><img :src="item.product.thumbnail" alt="" /></td>
-                                <td><a :href="'{% url 'product_page' slug='PLACEHOLDER' %}'.replace('PLACEHOLDER', item.product.slug)" x-text="item.product.name" class="fs-6"></a></td>
+                                <td>
+                                    <div class="d-flex flex-column">
+                                        <a :href="'{% url 'product_page' slug='PLACEHOLDER' %}'.replace('PLACEHOLDER', item.product.slug)" x-text="item.product.name" class="fs-6"></a>
+                                        <template x-for="attribute in item.product.attributes_list">
+                                            <div>
+                                                <small x-text="attribute.attribute + ': ' + attribute.value"></small>
+                                            </div>
+                                        </template>
+                                    </div>
+                                </td>
                                 <td x-text="item.unit_price" class="amt fs-6"></td>
                                 <td>
                                     <form :action="'/api/basket/'+item.ref+'/?basket'" :hx-put="'/api/basket/'+item.ref+'/?basket'" hx-trigger="change delay:1s, input delay:1s, submit delay:1s" method="put" x-init="htmx.process($el)">
@@ -50,23 +59,22 @@
                 {% include "components/empty_basket_cart.html" with type="basket" %}
             </div>
         </template>
-    </div>
-    <template x-if="basket?.items?.length">
-        <div class="cart-totals">
-            <h2 class="section-title">Cart Totals</h2>
-            <div class="cart-total">
-                <div class="d-flex gap-3 justify-content-between align-items-center">
-                    <div class="fw-semibold fs-6">Subtotal</div>
-                    <div x-text="basket.subtotal" class="amt fs-6"></div>
+        <template x-if="basket?.items?.length">
+            <div class="cart-totals">
+                <h2 class="section-title">Cart Totals</h2>
+                <div class="cart-total">
+                    <div class="d-flex gap-3 justify-content-between align-items-center">
+                        <div class="fw-semibold fs-6">Subtotal</div>
+                        <div x-text="basket.subtotal" class="amt fs-6"></div>
+                    </div>
+                    <div class="d-flex gap-3 justify-content-between align-items-center">
+                        <div class="fw-semibold fs-6">Total</div>
+                        <div x-text="basket.total" class="amt fs-6"></div>
+                    </div>
                 </div>
-                <div class="d-flex gap-3 justify-content-between align-items-center">
-                    <div class="fw-semibold fs-6">Total</div>
-                    <div x-text="basket.total" class="amt fs-6"></div>
-                </div>
+                <a href="{% url 'checkout' %}" class="btn btn-primary fs-5 fw-semibold">Proceed to Checkout <span class="bi bi-arrow-right text-white"></span></a>
             </div>
-            <a href="{% url 'checkout' %}" class="btn btn-primary fs-5 fw-semibold">Proceed to Checkout <span class="bi bi-arrow-right text-white"></span></a>
-        </div>
-    </template>
-</div>
+        </template>
+    </div>
 </div>
 {% endblock %}

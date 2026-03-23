@@ -1,5 +1,32 @@
 {% extends "account_manager/my_account_base.html" %}
+{% load wagtailcore_tags %}
 
 {% block account_content %}
 <h1>My Addresses</h1>
+<div class="d-flex flex-column gap-4">
+    <div class="billing">
+        <h2 class="fs-4">Billing Address</h2>
+        {% with billing_address=request.user.get_billing_address %}
+        <div id="billing">
+            {% if billing_address %}
+            {{ billing_address.display_address|richtext }}
+            {% else %}
+            Not set
+            {% endif %}
+        </div>
+        {% endwith %}
+    </div>
+    <div class="shipping">
+        <h2 class="fs-4">Shipping Address</h2>
+        {% with shipping_address=request.user.get_shipping_address %}
+        <div id="billing">
+            {% if shipping_address %}
+            {{ shipping_address.display_address|richtext }}
+            {% else %}
+            Not set
+            {% endif %}
+        </div>
+        {% endwith %}
+    </div>
+</div>
 {% endblock %}

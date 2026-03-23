@@ -1,0 +1,17 @@
+.wishlist-page .wishlist-info .table tbody td {
+  vertical-align: middle;
+}
+.wishlist-page .wishlist-info .table tbody .qty input {
+  border: none;
+  border-radius: 0 !important;
+  border-bottom: 1px solid #769840;
+  box-shadow: none;
+  width: 60px;
+  text-align: center;
+}
+.wishlist-page .wishlist-info .table tbody .qty input::-webkit-inner-spin-button, .wishlist-page .wishlist-info .table tbody .qty input::-webkit-outer-spin-button {
+  display: none;
+}
+.wishlist-page .wishlist-info .table tbody .qty input button {
+  border-radius: 50rem !important;
+}/*# sourceMappingURL=wishlist_page.css.map */

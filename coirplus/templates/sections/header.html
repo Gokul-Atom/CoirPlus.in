@@ -124,7 +124,14 @@
                             <div class="d-flex gap-3 basket-item">
                                 <img :src="item.product.thumbnail" alt="" srcset="">
                                 <div class="d-flex flex-column gap-2">
-                                    <span class="fs-6 fw-semibold" x-text="item.product.name"></span>
+                                    <div class="d-flex flex-column">
+                                        <span class="fs-6 fw-semibold" x-text="item.product.name"></span>
+                                        <template x-for="attribute in item.product.attributes_list">
+                                            <div>
+                                                <small x-text="attribute.attribute + ': ' + attribute.value"></small>
+                                            </div>
+                                        </template>
+                                    </div>
                                     <span x-text="item.unit_price" class="fs-5 amt fw-semibold"></span>
                                     <span x-text="'x ' + item.quantity" class="qty fw-semibold"></span>
                                 </div>

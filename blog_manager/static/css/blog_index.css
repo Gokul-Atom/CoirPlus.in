@@ -1,0 +1,35 @@
+.blog-main {
+  display: grid;
+  gap: 2rem;
+}
+@media screen and (min-width: 992px) {
+  .blog-main {
+    grid-template-columns: 8fr 4fr;
+  }
+}
+.blog-main .blog-posts {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+}
+@media screen and (min-width: 768px) {
+  .blog-main .blog-posts {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+  }
+}
+@media screen and (min-width: 992px) {
+  .blog-main .blog-posts {
+    gap: 2rem;
+  }
+}
+.blog-main .blog-posts .blog-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+.blog-main .blog-sidebar {
+  box-shadow: 0 0 6px #E6E6E6;
+  padding: 1rem;
+  border-radius: 1rem;
+}/*# sourceMappingURL=blog_index.css.map */

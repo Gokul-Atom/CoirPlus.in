@@ -1,6 +1,30 @@
-{% load wagtailimages_tags my_tags my_filters menu_tags %}
+{% load wagtailimages_tags wagtailcore_tags my_tags my_filters menu_tags %}
 
 {% with common_settings=settings.common.SiteSettings %}
+<div class="bottom-drawer d-lg-none">
+    <div class="d-grid">
+        <a href="{% pageurl common_settings.shop_page %}" class="drawer-item">
+            <span class="bi bi-cart-fill"></span>
+            <span class="visually-hidden">Shop</span>
+        </a>
+        <a href="{% pageurl common_settings.wishlist_page %}" class="drawer-item">
+            <span class="bi bi-heart-fill"></span>
+            <span class="visually-hidden">Wishlist</span>
+        </a>
+        <button type="button" class="drawer-item btn" data-bs-toggle="offcanvas" data-bs-target="#cart-offcanvas">
+            <span class="bi bi-bag-fill"></span>
+            <span class="visually-hidden">Cart</span>
+        </button>
+        <a href="{% pageurl common_settings.account_page %}" class="drawer-item">
+            <span class="bi bi-person-fill"></span>
+            <span class="visually-hidden">My Account</span>
+        </a>
+        <button class="drawer-item btn" type="button" data-bs-toggle="modal" data-bs-target="#search-modal">
+            <span class="bi bi-search"></span>
+            <span class="visually-hidden">Search</span>
+        </button>
+    </div>
+</div>
 <footer class="d-flex flex-column footer">
     <div class="d-grid py-5 px-3 gap-4 footer-body">
         <div class="brand-logo">

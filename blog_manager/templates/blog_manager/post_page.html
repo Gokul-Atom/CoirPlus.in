@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% load static wagtailcore_tags wagtailimages_tags my_tags %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/blog_post.css' %}{% static_timestamp %}">
+{% endblock %}
+
+{% block content %}
+<div class="post-main p-3">
+    <div class="blog-post p-3">
+        <h1 class="page-title">{{ page.title }}</h1>
+        <div>
+            {% include_block page.body %}
+        </div>
+    </div>
+    <div class="post-sidebar">
+        <form class="d-flex position-relative w-100 search-form nav-search-form" role="search" action="{% pageurl settings.common.SiteSettings.blog_page %}">
+            <input class="form-control rounded-pill" type="search" name="blog" placeholder="Search Blog" value="{{ request.GET.blog }}" aria-label="Search" />
+            <div class="position-absolute">
+                <button class="btn btn-primary rounded-pill" type="submit"><span class="bi bi-search"></span><span class="visually-hidden">Search</span></button>
+            </div>
+        </form>
+        <div class="related-posts">
+            <div class="fs-4 h fw-bold mb-3">Related Posts</div>
+            <div class="posts">
+                {% for post in related_posts %}
+                <div class="post-card">
+                    <a href="{% pageurl post %}">
+
+                        <div class="d-flex gap-3">
+                            <div>
+                                {% image post.specific.featured_image|default:placeholder_image width-100 format-webp class="d-block w-100 h-auto" %}
+                            </div>
+                            <div>
+                                <p class="fs-6 fw-semibold mb-0">
+                                    {{ post.title }}
+                                </p>
+                                <small>{{ post.first_published_at }}</small>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -25,7 +25,7 @@
   .actions {
     top: 2rem;
     right: 1rem;
-    a {
+    .action-item {
       aspect-ratio: 1;
       border-radius: 50rem;
       padding: 0.5rem;
@@ -52,7 +52,7 @@
       }
     }
     .actions {
-      a {
+      .action-item {
         opacity: 1;
         pointer-events: auto;
         transform: translateX(0);

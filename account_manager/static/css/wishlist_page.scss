@@ -1,0 +1,30 @@
+@import "../../../coirplus/static/css/variables";
+
+.wishlist-page {
+  .wishlist-info {
+    .table {
+      tbody {
+        td {
+          vertical-align: middle;
+        }
+        .qty {
+          input {
+            border: none;
+            border-radius: 0 !important;
+            border-bottom: 1px solid $primary;
+            box-shadow: none;
+            width: 60px;
+            text-align: center;
+            &::-webkit-inner-spin-button,
+            &::-webkit-outer-spin-button {
+              display: none;
+            }
+            button {
+              border-radius: 50rem !important;
+            }
+          }
+        }
+      }
+    }
+  }
+}

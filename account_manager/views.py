@@ -3,11 +3,20 @@ from django.template.response import TemplateResponse
 from store_manager.models import Basket, Order
 from account_manager.forms import CheckoutAddressForm
 from salesman.checkout.payment import payment_methods_pool
+from salesman.core.utils import get_salesman_model
 from django.core.exceptions import ValidationError
 from django.http import HttpResponse
 from django.urls import reverse
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+
+from store_manager.models import ProductVariation
+from store_manager.serializers import ProductVariationSerializer
+from .models import CheckoutAddress
+from .forms import CheckoutAddressForm
+
 
 # Create your views here.
 @login_required
@@ -96,6 +105,57 @@ def payment_success_view(request, token):
         return render(request, 'account_manager/payment_success.html')
     return redirect("my_orders")
     return render(request, 'account_manager/payment_failure.html')
+
+
+@login_required
+@api_view(["POST"])
+def toggle_wishlist(request, variation_id):
+    variation = get_object_or_404(ProductVariation, id=variation_id)
+    user = request.user
+    data = {}
+    if user in variation.wishlisted_by.all():
+        variation.wishlisted_by.remove(user)
+        data = {"id": variation_id, "status": -1}
+    else:
+        variation.wishlisted_by.add(user)
+        data = {"id": variation_id, "status": 1}
+    variation.save(update_fields=["wishlisted_by"])
+    if "wishlist" in request.query_params:
+        return redirect("get_wishlist")
+    return Response(data)
+
+@login_required
+@api_view(["GET", "POST"])
+def update_user_address(request, address_id):
+    address = get_object_or_404(CheckoutAddress, id=address_id)
+    form = CheckoutAddressForm(instance=address)
+    context = {
+        "form": form
+    }
+    return TemplateResponse(request, "components/form_template.html", context=context)
+
+
+@login_required
+@api_view(["GET"])
+def get_wishlist(request):
+    wishlist = request.user.wishlisted_products.all()
+    serializer = ProductVariationSerializer(wishlist, many=True)
+    return Response(serializer.data)
+
+
+@login_required
+@api_view(["POST"])
+def add_from_wishlist(request):
+    wishlist = request.user.wishlisted_products.all()
+    Basket = get_salesman_model("Basket")
+    basket, created = Basket.objects.get_or_create_from_request(request)
+    variation = get_object_or_404(ProductVariation, id=request.POST.get("product_id"))
+    basket.add(
+        product=variation,
+        quantity=int(request.POST.get("quantity")),
+    )
+    serializer = ProductVariationSerializer(wishlist, many=True)
+    return Response(serializer.data)
 
 
 @login_required

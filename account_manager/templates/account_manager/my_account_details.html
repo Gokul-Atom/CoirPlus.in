@@ -2,4 +2,12 @@
 
 {% block account_content %}
 <h1>My Account Details</h1>
+<ul class="list-unstyled d-flex flex-column gap-3 mt-3">
+    <li>
+        <a class="fs-6" href="{% url 'account_email' %}">Change Email</a>
+    </li>
+    <li>
+        <a class="fs-6" href="{% url 'account_change_password' %}">Change Password</a>
+    </li>
+</ul>
 {% endblock %}

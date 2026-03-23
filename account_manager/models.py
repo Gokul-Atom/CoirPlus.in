@@ -57,9 +57,26 @@ class User(AbstractUser):
     #     verbose_name=_("Default delivery address"),
     #     related_name="+",
     # )
+    # billing_address = models.OneToOneField("account_manager.CheckoutAddress", on_delete=models.SET_NULL, blank=True, null=True)
+    # shipping_address = models.OneToOneField("account_manager.CheckoutAddress", on_delete=models.SET_NULL, blank=True, null=True)
+
     @property
     def display_name(self):
         return self.get_full_name() or self.username
+    
+    @property
+    def get_shipping_address(self):
+        return self.addresses.filter(is_shipping=True).last()
+    
+    @property
+    def get_billing_address(self):
+        return self.addresses.filter(is_billing=True).last()
+    
+    # @property
+    # def wishlisted_product_ids(self):
+    #     product_ids = list(self.wishlisted_products.values_list("id", flat=True))
+    #     import json
+    #     return json.dumps(product_ids)
     
     def __str__(self):
         return self.display_name

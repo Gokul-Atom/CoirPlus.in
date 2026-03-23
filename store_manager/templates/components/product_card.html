@@ -1,6 +1,6 @@
-{% load wagtailcore_tags wagtailimages_tags %}
+{% load wagtailcore_tags wagtailimages_tags my_tags %}
 
-<div class="product-card position-relative" x-data="{ data: {{product.product_details}}, selected_variation: null }">
+<div class="product-card position-relative" x-data="{ data: {{product.product_details}}, selected_variation: null, wishlisted: {% wishlisted_products %} }">
     <div class="product-image">
         <a href="{% url 'product_page' slug=product.slug %}">
             {% with product_images=product.images.all %}
@@ -17,12 +17,18 @@
         </template>
     </div>
     <div class="position-absolute d-flex flex-column gap-3 actions">
-        <a href="#" type="button" data-bs-toggle="tooltip" data-bs-placement="left" data-bs-title="Quick View" title="Quick View" style="--i: 1">
+        <button class="action-item" hx-get="{% url 'quick_view_product_page' slug=product.slug %}" hx-target="#quick-view-modal-body > div" hx-indicator="#quick-view-modal-body" data-bs-toggle="modal" data-bs-target="#quick-view-modal" type="button" data-bs-toggle="tooltip" data-bs-placement="left" data-bs-title="Quick View" title="Quick View" style="--i: 1">
             <span class="bi bi-eye"></span>
-        </a>
-        <a href="#" type="button" data-bs-toggle="tooltip" data-bs-placement="left" data-bs-title="Add to Wishlist" title="Wishlist" style="--i: 2">
-            <span class="bi bi-heart"></span>
-        </a>
+        </button>
+        {% if request.user.is_authenticated %}
+        <template x-if="selected_variation">
+            <form :action="'{% url 'toggle_wishlist' variation_id='0' %}'.replace('0', selected_variation ? selected_variation : data.variations[0].id)" x-effect="selected_variation; htmx.process($el)" :hx-post="'{% url 'toggle_wishlist' variation_id='0' %}'.replace('0', selected_variation ? selected_variation : data.variations[0].id)" @htmx:after-request="res=JSON.parse(event.detail.xhr.response || '{}'); res.status > 0 ? $data.wishlisted.push(res.id) : $data.wishlisted.splice($data.wishlisted.indexOf(res.id),1);" method="post" hx-swap="none">
+                <button class="action-item" type="submit" data-bs-toggle="tooltip" data-bs-placement="left" data-bs-title="Add to Wishlist" title="Wishlist" style="--i: 2">
+                    <span class="bi" :class="wishlisted.find(w=>w==selected_variation) ? 'bi-heart-fill' : 'bi-heart'"></span>
+                </button>
+            </form>
+        </template>
+        {% endif %}
     </div>
     <div class="product-info">
         <div class="variations">

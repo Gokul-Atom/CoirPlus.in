@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+{% load my_tags static %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/wishlist_page.css' %}{% static_timestamp %}">
+{% endblock %}
+
+{% block body_class %}wishlist-page{% endblock %}
+
+{% block content %}
+<div class="py-5 px-3 box">
+    <h1 class="page-title">{{ page.title }}</h1>
+    <div x-data="{wishlist:{}}" class="wishlist-info" hx-get="/api/wishlist/" hx-swap="none" hx-trigger="load" @htmx:after-request="$data.wishlist=JSON.parse(event.detail.xhr.response || '{}')">
+        <template x-if="wishlist?.length">
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th>Product</th>
+                            <th>Price</th>
+                            <th>Add to Basket</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <template x-for="product in wishlist" :key="product.id">
+                            <tr x-data="{ qty: 1 }">
+                                <td><img :src="product.thumbnail" alt="" /></td>
+                                <td>
+                                    <div class="d-flex flex-column">
+                                        <a :href="'{% url 'product_page' slug='PLACEHOLDER' %}?vid='.replace('PLACEHOLDER', product.slug) + product.id" x-text="product.name" class="fs-6"></a>
+                                        <template x-for="attribute in product.attributes_list">
+                                            <div>
+                                                <small x-text="attribute.attribute + ': ' + attribute.value"></small>
+                                            </div>
+                                        </template>
+                                    </div>
+                                </td>
+                                <td x-text="product.sale_price ? product.sale_price : product.base_price" class="amt fs-6"></td>
+                                <td>
+                                    <div class="text-nowrap">
+                                        <form action="{% url 'add_from_wishlist' %}" hx-post="{% url 'add_from_wishlist' %}" hx-swap="none" method="post" x-data="{ qty: 1, buttonText: 'Add to Cart' }" class="d-flex gap-3" id="basket-form" @htmx:after-request="$data.buttonText='Added'; document.querySelector('*[data-bs-target=\'#cart-offcanvas\']').click(); const submitBtn = $el.querySelector('button[type=\'submit\']'); submitBtn.disabled=true; setTimeout(()=>{$data.buttonText='Add to Cart'; submitBtn.disabled=false;}, 4000);" x-init="htmx.process($el)">
+                                            {% csrf_token %}
+                                            <input type="hidden" name="product_type" value="store_manager.ProductVariation">
+                                            <input type="hidden" name="product_id" :value="product.id">
+                                            <div class="d-flex qty">
+                                                <button class="btn btn-primary bi bi-dash-lg" type="button" @click="qty - 1 < 1 ? qty : qty--"></button>
+                                                <input type="number" name="quantity" id="quantity" x-model.number="qty" min="1" max="10" @input="if (qty < 1) qty = 1; if (qty > 10) qty = 10;">
+                                                <button class="btn btn-primary bi bi-plus-lg" type="button" @click="qty + 1 > 10 ? qty : qty++"></button>
+                                            </div>
+                                            <button type="submit" class="btn btn-primary"><span class="bi bi-cart-plus text-white fs-5"></span> <span class="text-white fw-bold" x-text="buttonText"></span></button>
+                                        </form>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div>
+                                        <form :action="'{% url 'toggle_wishlist' variation_id='0' %}'.replace('0', product.id)" x-init="htmx.process($el)" :hx-post="'{% url 'toggle_wishlist' variation_id='0' %}?wishlist'.replace('0', product.id)" method="post" hx-swap="none" hx-confirm="Are you sure to remove this product from your wishlist?">
+                                            <button class="btn" type="submit" title="Remove Wishlist">
+                                                <span class="bi bi-x-lg text-danger"></span>
+                                            </button>
+                                        </form>
+                                    </div>
+                                </td>
+                            </tr>
+                        </template>
+                    </tbody>
+                </table>
+            </div>
+        </template>
+        <template x-if="!wishlist?.length">
+            <div>
+                {% include "components/empty_basket_cart.html" with type="wishlist" %}
+            </div>
+        </template>
+    </div>
+</div>
+{% endblock %}

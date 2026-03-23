@@ -1,0 +1,30 @@
+@import "../../../coirplus/static/css/variables";
+@import "../../../coirplus/static/css/mixins";
+
+.post-main {
+  display: grid;
+  gap: 2rem;
+  @media screen and (min-width: 992px) {
+    grid-template-columns: 8fr 4fr;
+  }
+  .blog-post {
+  }
+  .post-sidebar {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    @include container();
+    .related-posts {
+      .posts {
+        display: grid;
+        gap: 2rem;
+        @media screen and (min-width: 576px) {
+          grid-template-columns: repeat(2, 1fr);
+        }
+        @media screen and (min-width: 992px) {
+          grid-template-columns: 12fr;
+        }
+      }
+    }
+  }
+}
