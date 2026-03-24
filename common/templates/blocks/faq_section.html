@@ -1,0 +1,18 @@
+{% load wagtailcore_tags %}
+
+<div class="faq-section">
+    {% if self.heading %}
+    <h2 class="section-title">
+        {{ self.heading }}
+    </h2>
+    {% endif %}
+
+    {% if self.body %}
+    <div>{% include_block self.body %}</div>
+    {% endif %}
+    <div class="accordion accordion-flush faqs {% if self.css_class %}{{ self.css_class }}{% endif %}" id="faq-{{ self.css_id }}">
+        {% for faq in self.items %}
+        {% include "components/faq_item.html" with question=faq.question answer=faq.answer item_id=forloop.counter %}
+        {% endfor %}
+    </div>
+</div>

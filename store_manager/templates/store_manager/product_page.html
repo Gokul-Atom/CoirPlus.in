@@ -101,14 +101,7 @@
         {% include "components/full_info.html" %}
     </div>
     <hr>
-    <div class="recently-viewed">
-        <h3>Recently Viewed</h3>
-        <div class="products">
-            {% for product in recently_viewed %}
-            {% include "components/product_card.html" with product=product.product %}
-            {% endfor %}
-        </div>
-    </div>
+    {% include "components/recently_viewed.html" %}
 </div>
 {% endwith %}
 {% include "components/quick_view_modal.html" %}

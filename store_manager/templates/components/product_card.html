@@ -38,8 +38,8 @@
         <div class="variations">
             <template x-for="variation in data.variations">
                 <div class="variation">
-                    <input type="radio" name="variation" :id="'v-' + variation.id" :value="variation.id" x-model="selected_variation">
-                    <label :for="'v-' + variation.id" x-text="variation.attributes[0].value"></label>
+                    <input type="radio" name="{{ input_field_prefix }}variation-{{ product.id }}" :id="'{{ input_field_prefix }}v-' + variation.id" :value="variation.id" x-model="selected_variation">
+                    <label :for="'{{ input_field_prefix }}v-' + variation.id" x-text="variation.attributes[0].value"></label>
                 </div>
             </template>
         </div>

@@ -1,1 +1,16 @@
 {% extends "base.html" %}
+{% load wagtailcore_tags static my_tags %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/simple_page.css' %}{% static_timestamp %}">
+<link rel="stylesheet" href="{% static 'css/sections.css' %}{% static_timestamp %}">
+{% endblock %}
+
+{% block body_class %}faqs-page{% endblock %}
+
+{% block content %}
+<div class="box box-p">
+    <h1 class="page-title">{{ page.title }}</h1>
+    {% include_block page.body %}
+</div>
+{% endblock %}

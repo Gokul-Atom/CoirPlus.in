@@ -1,7 +1,7 @@
 {% load wagtailimages_tags %}
 
 {% with product_images=product.images.all %}
-<section id="image-carousel" class="splide" aria-label="{{ product.title }} images">
+<section id="image-carousel-{{ input_field_prefix }}{{ product.id }}" class="splide" aria-label="{{ product.title }} images">
     <div class="splide__track">
         <ul class="splide__list">
             {% for image in product_images|slice:3 %}
@@ -17,7 +17,7 @@
     </div>
 </section>
 {% if product_images %}
-<section id="thumbnail-carousel" class="splide thumbnail-splide mt-2" aria-label="{{ product.title }} thumbnails">
+<section id="thumbnail-carousel-{{ input_field_prefix }}{{ product.id }}" class="splide thumbnail-splide mt-2" aria-label="{{ product.title }} thumbnails">
     <div class="splide__track">
         <ul class="splide__list justify-content-center">
             {% for image in product_images|slice:3 %}
@@ -32,14 +32,14 @@
 
 <script>
     function initSplide() {
-        const imageSplide = new Splide('#image-carousel', {
+        const imageSplide = new Splide('#image-carousel-{{ input_field_prefix }}{{ product.id }}', {
             arrows: false,
             type: "loop",
             pagination: false,
             lazyLoad: true,
         });
         {% if product_images %}
-        const thumbnailSplide = new Splide('#thumbnail-carousel', {
+        const thumbnailSplide = new Splide('#thumbnail-carousel-{{ input_field_prefix }}{{ product.id }}', {
             fixedWidth: 60,
             fixedHeight: 60,
             gap: 10,

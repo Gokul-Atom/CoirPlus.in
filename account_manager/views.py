@@ -58,6 +58,7 @@ def checkout_page(request):
                         "different_shipping_address": bool(different_shipping_address),
                         "shipping_form": shipping_form,
                         "billing_form": billing_form,
+                        "page_title": "Checkout",
                     }
                     response = TemplateResponse(request, "components/checkout_form.html", context=context)
                     response["HX-Redirect"] = reverse("payment_page", kwargs={"token": order.token})
@@ -71,19 +72,21 @@ def checkout_page(request):
                 "different_shipping_address": bool(different_shipping_address),
                 "shipping_form": shipping_form,
                 "billing_form": billing_form,
+                "page_title": "Checkout",
             }
             if request.headers.get("HX-Request"):
                 return TemplateResponse(request, "components/checkout_form.html", context=context)
-            return render(request, "account_manager/checkout_page.html", context=context)
+            return TemplateResponse(request, "account_manager/checkout_page.html", context=context)
 
             # return redirect("success")
     else:
         shipping_form = CheckoutAddressForm(prefix="shipping")
         billing_form = CheckoutAddressForm(prefix="billing")
 
-    return render(request, "account_manager/checkout_page.html", {
+    return TemplateResponse(request, "account_manager/checkout_page.html", {
         "shipping_form": shipping_form,
         "billing_form": billing_form,
+        "page_title": "Checkout",
     })
 
 
@@ -92,6 +95,7 @@ def payment_page(request, token):
     order = Order.objects.filter(token=token).first()
     common_settings = SiteSettings.load()
     context = {
+        "page_title": "Pay order",
         "order": order,
         "razorpay_api_key": common_settings.live_api_key if common_settings.enable_live_mode else common_settings.test_api_key
     }
@@ -120,12 +124,12 @@ def payment_success_view(request, token):
         order.razorpay_payment_id = payment_id
         order.status = "PAID"
         order.save()
-        messages.success(request, "Payment Success", extra_tags="success")
-        # return render(request, 'account_manager/payment_success.html')
+        messages.success(request, "Order placed successfully", extra_tags="success")
+        # return TemplateResponse(request, 'account_manager/payment_success.html')
     else:
         messages.error(request, "Payment Failed", extra_tags="danger")
     return redirect("my_orders")
-    # return render(request, 'account_manager/payment_failure.html')
+    # return TemplateResponse(request, 'account_manager/payment_failure.html')
 
 
 @login_required
@@ -164,11 +168,13 @@ def get_wishlist(request):
     return Response(serializer.data)
 
 
-@login_required
 @api_view(["GET"])
 def get_wishlist_quantity(request):
-    wishlist = request.user.wishlisted_products.all()
-    return Response({"quantity": wishlist.count()})
+    if request.user and request.user.is_authenticated:
+        wishlist_quantity = request.user.wishlisted_products.all().count()
+    else:
+        wishlist_quantity = 0
+    return Response({"quantity": wishlist_quantity})
 
 
 @login_required
@@ -188,24 +194,33 @@ def add_from_wishlist(request):
 
 @login_required
 def my_orders(request):
-    context = {}
+    context = {
+        "page_title": "My Orders",
+    }
     return TemplateResponse(request, "account_manager/my_orders.html", context=context)
 
 
 @login_required
 def view_order(request, order_ref):
     order = get_object_or_404(Order, ref=order_ref, user=request.user)
-    context = {"order": order}
+    context = {
+        "order": order,
+        "page_title": f"View Order #{order.ref}"
+        }
     return TemplateResponse(request, "account_manager/view_order.html", context=context)
 
 
 @login_required
 def my_addresses(request):
-    context = {}
+    context = {
+        "page_title": "My Addresses",
+    }
     return TemplateResponse(request, "account_manager/my_addresses.html", context=context)
 
 
 @login_required
 def my_account_details(request):
-    context = {}
+    context = {
+        "page_title": "My Account Details",
+    }
     return TemplateResponse(request, "account_manager/my_account_details.html", context=context)

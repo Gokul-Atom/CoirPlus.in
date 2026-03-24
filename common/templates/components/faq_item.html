@@ -1,0 +1,12 @@
+<div class="accordion-item faq-item w-100">
+    <h5 class="accordion-header">
+        <button class="accordion-button fw-bold shadow-none collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#{{ self.css_id }}-{{ item_id }}" aria-expanded="false" aria-controls="{{ self.css_id }}-{{ item_id }}">
+            {{ question }}
+        </button>
+    </h5>
+    <div id="{{ self.css_id }}-{{ item_id }}" class="accordion-collapse collapse" data-bs-parent="#faq-{{ self.css_id }}">
+        <div class="accordion-body py-0">
+            {{ answer }}
+        </div>
+    </div>
+</div>

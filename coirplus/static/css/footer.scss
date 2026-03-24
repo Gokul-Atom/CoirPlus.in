@@ -1,7 +1,6 @@
 @import "variables";
 @import "mixins";
 
-
 .bottom-drawer {
   position: fixed;
   z-index: 99;
@@ -15,7 +14,7 @@
     align-items: center;
     .drawer-item {
       &.btn {
-        border-radius: 0!important;
+        border-radius: 0 !important;
       }
       display: flex;
       align-items: center;
@@ -78,6 +77,18 @@
       }
     }
   }
+  .footer-social-links {
+    a {
+      transition: all ease 300ms;
+      &:hover {
+        background: $primary;
+        border-color: $primary-dark!important;
+        .bi {
+          color: white;
+        }
+      }
+    }
+  }
   .bi {
     font-size: $icon-size;
   }
@@ -114,6 +125,13 @@
 #scroll-to-top {
   position: fixed;
   bottom: 3rem;
+  opacity: 0;
+  transform: translateY(2rem);
+  transition: all ease 300ms;
+  &.show {
+    opacity: 1;
+    transform: translateY(0);
+  }
   @media screen and (max-width: 991px) {
     bottom: 6rem;
   }

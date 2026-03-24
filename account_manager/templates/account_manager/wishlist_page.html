@@ -55,7 +55,7 @@
                                 </td>
                                 <td>
                                     <div>
-                                        <form :action="'{% url 'toggle_wishlist' variation_id='0' %}'.replace('0', product.id)" x-init="htmx.process($el)" :hx-post="'{% url 'toggle_wishlist' variation_id='0' %}?wishlist'.replace('0', product.id)" method="post" hx-swap="none" hx-confirm="Are you sure to remove this product from your wishlist?">
+                                        <form :action="'{% url 'toggle_wishlist' variation_id='0' %}'.replace('0', product.id)" x-init="htmx.process($el)" :hx-post="'{% url 'toggle_wishlist' variation_id='0' %}?wishlist'.replace('0', product.id)" method="post" hx-swap="none" @htmx:after-request='htmx.trigger("#drawer-wishlist", "refreshWishlistQuantity");' hx-confirm="Are you sure to remove this product from your wishlist?">
                                             <button class="btn" type="submit" title="Remove Wishlist">
                                                 <span class="bi bi-x-lg text-danger"></span>
                                             </button>

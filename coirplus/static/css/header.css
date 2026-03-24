@@ -102,6 +102,10 @@ header nav .brand-logo {
   top: 100%;
   background: white;
 }
+.suggestions-lg .suggestions {
+  max-height: calc(80dvh - 5rem);
+  overflow-y: auto;
+}
 .suggestions-lg .suggestions:has(li) {
   box-shadow: 0 0 6px #E6E6E6;
   padding: 1rem;

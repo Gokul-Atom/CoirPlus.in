@@ -1,6 +1,6 @@
 <section class="p-3 best-selling-products-section">
     <h2 class="section-title">{{ self.heading }}</h2>
     <div class="products best-selling-products">
-        {% include "components/shop_products.html" %}
+        {% include "components/shop_products.html" with input_field_prefix="bs" %}
     </div>
 </section>

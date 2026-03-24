@@ -64,7 +64,7 @@ class AdvancedRichText(CSSBase):
 
 class BlocksBase(blocks.StreamBlock):
     rich_text = blocks.RichTextBlock(required=False)
-    advanced_rich_text = AdvancedRichText()
+    advanced_rich_text = AdvancedRichText(required=False)
     html = blocks.RawHTMLBlock(label="HTML")
 
 
@@ -305,25 +305,20 @@ class ProductDescriptionGallery(CSSBase):
 #     pass
 
 
-# class FAQItem(blocks.StructBlock):
-#     question = blocks.TextBlock()
-#     answer = blocks.RichTextBlock(features=["bold", "italic", "ol", "ul"])
+class FAQItem(blocks.StructBlock):
+    question = blocks.TextBlock()
+    answer = blocks.RichTextBlock(features=["bold", "italic", "ol", "ul", "link"])
 
 
-# class FAQBlock(StructBlockBase):
-#     heading = blocks.CharBlock(required=False)
-#     body = blocks.RichTextBlock(required=False)
-#     items = blocks.ListBlock(
-#         FAQItem()
-#     )
-#     type = blocks.ChoiceBlock(
-#         choices=FAQ_CHOICES,
-#         default="service",
-#         help_text=_('Use "General" for pages other than service page. Heading given here will be used. Use "Service" for service pages. Heading given here will be used with "FAQ on" prefix; if left empty page title will be used.')
-#     )
+class FAQBlock(CSSBase):
+    heading = blocks.CharBlock(required=False)
+    body = BlocksBase(required=False)
+    items = blocks.ListBlock(
+        FAQItem()
+    )
 
-#     class Meta:
-#         template = "blocks/faq_block.html"
+    class Meta:
+        template = "blocks/faq_section.html"
 
 
 # class TableBlock(TypedTableBlock):
@@ -596,6 +591,7 @@ class CustomBlock(BlocksBase):
     two_column_image_block = TwoColumnImageBlock(group="Sections")
     mattress_benefits = MattressBenefitsSection(group="Sections")
     mattress_sizes = MattressSizeSection(group="Sections")
+    faq_section = FAQBlock(group="Sections")
     cta_block = CTABlock(group="CTA")
     # hero_section = HeroSectionBlock(group="Sections")
     # hero_section_general = HeroSectionGeneral(group="Sections")

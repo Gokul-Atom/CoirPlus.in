@@ -6,6 +6,7 @@
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'css/contact_page.css' %}{% static_timestamp %}">
 <link rel="stylesheet" href="{% static 'css/product_card.css' %}{% static_timestamp %}">
+<link rel="stylesheet" href="{% static 'css/product_page.css' %}{% static_timestamp %}">
 {% endblock %}
 
 {% block content %}
@@ -80,5 +81,6 @@
         {% endfor %}
     </div>
 </div>
+{% include "components/quick_view_modal.html" %}
 {% endwith %}
 {% endblock %}

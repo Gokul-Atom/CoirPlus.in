@@ -8,10 +8,13 @@
 <link rel="stylesheet" href="{% static 'css/homepage.css' %}{% static_timestamp %}">
 <link rel="stylesheet" href="{% static 'css/sections.css' %}{% static_timestamp %}">
 <link rel="stylesheet" href="{% static 'css/product_card.css' %}{% static_timestamp %}">
+<link rel="stylesheet" href="{% static 'css/product_page.css' %}{% static_timestamp %}">
 {% endblock extra_css %}
 
 {% block content %}
+<h1 class="d-none">Premium Coir Mattresses</h1>
 {% include_block page.body %}
+{% include "components/quick_view_modal.html" %}
 {% endblock content %}
 
 {% block extra_js %}

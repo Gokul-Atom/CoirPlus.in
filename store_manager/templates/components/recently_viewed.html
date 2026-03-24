@@ -1,0 +1,8 @@
+<div class="recently-viewed">
+    <h3>Recently Viewed</h3>
+    <div class="products">
+        {% for product in recently_viewed %}
+        {% include "components/product_card.html" with product=product.product input_field_prefix="rv" %}
+        {% endfor %}
+    </div>
+</div>

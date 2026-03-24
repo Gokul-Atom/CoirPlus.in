@@ -1,5 +1,5 @@
 from .base import *
-
+import os
 DEBUG = False
 
 # ManifestStaticFilesStorage is recommended in production, to prevent
@@ -22,7 +22,7 @@ ALLOWED_HOSTS = [
     "www.coirplus.in",
     "coirplus.in",
     ]
-
+EMAIL_BACKEND = 'common.email_backends.CustomEmailBackend'
 try:
     from .local import *
 except ImportError:

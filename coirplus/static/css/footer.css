@@ -84,6 +84,16 @@
 .footer .footer-newsletter > div span {
   color: white;
 }
+.footer .footer-social-links a {
+  transition: all ease 300ms;
+}
+.footer .footer-social-links a:hover {
+  background: #769840;
+  border-color: #597231 !important;
+}
+.footer .footer-social-links a:hover .bi {
+  color: white;
+}
 .footer .bi {
   font-size: 1.5em;
 }
@@ -119,6 +129,13 @@
 #scroll-to-top {
   position: fixed;
   bottom: 3rem;
+  opacity: 0;
+  transform: translateY(2rem);
+  transition: all ease 300ms;
+}
+#scroll-to-top.show {
+  opacity: 1;
+  transform: translateY(0);
 }
 @media screen and (max-width: 991px) {
   #scroll-to-top {

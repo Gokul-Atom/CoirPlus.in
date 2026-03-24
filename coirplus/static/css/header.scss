@@ -113,8 +113,12 @@ header {
   width: 100%;
   top: 100%;
   background: white;
-  .suggestions:has(li) {
-    @include container();
+  .suggestions {
+    max-height: calc(80dvh - 5rem);
+    overflow-y: auto;
+    &:has(li) {
+      @include container();
+    }
   }
 }
 .suggestions {
